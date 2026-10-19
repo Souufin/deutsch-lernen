@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
+    <!-- دعم PWA: ملف البيان وأيقونة التثبيت (الملفات توضع بجانب index.html عند النشر) -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#1F5C38" />
+    <link rel="apple-touch-icon" href="icon.svg" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" href="data:," />
     <title>أداة تعلم الألمانية</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -44,6 +51,12 @@
       .chip.gold{color:var(--gold)} .chip.green{color:var(--ok)} .chip.brick{color:var(--brick)}
       .chip b{color:var(--ink)}
       .levelmini{flex:1;min-width:150px}
+      /* زر تثبيت التطبيق (PWA) — يبقى مخفياً حتى يتيح المتصفح التثبيت */
+      .installbtn{display:none;align-items:center;gap:6px;background:var(--green);color:#fff;font-weight:700;
+        font-size:.85rem;border-radius:999px;padding:5px 14px;box-shadow:0 2px 8px rgba(31,92,56,.25);transition:.15s}
+      .installbtn:hover{filter:brightness(1.08)}
+      .installbtn.show{display:inline-flex}
+      .installbtn svg{width:16px;height:16px;flex:none}
       .levelmini .lbl{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-weight:600}
       .bar{height:9px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:3px}
       .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#E9A13B);border-radius:99px;transition:width .5s}
@@ -325,6 +338,7 @@
           <div class="lbl"><span id="stLevel">المستوى A1 — البداية</span><span id="stPct">0%</span></div>
           <div class="bar"><i id="stBar" style="width:0%"></i></div>
         </div>
+        <button class="installbtn" id="installBtn" type="button" aria-label="ثبّت التطبيق على جهازك"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10.5 12 15.5l5-5"/><path d="M4 19.5h16"/></svg>ثبّت التطبيق</button>
       </div>
     </div>
 
@@ -2001,6 +2015,42 @@
     showView("path");
     $("#chatBox").innerHTML = "";
     sysMsg("أهلاً بيك! اختار موقفاً من الأزرار أعلاه وغادي نمشيو خطوة بخطوة. أو اسألني من الأسئلة السريعة تحت.");
+    </script>
+    <script>
+    /* ==================== دعم PWA (تطبيق ويب قابل للتثبيت) ==================== */
+    // تسجيل عامل الخدمة من ملف sw.js الموجود بجانب الصفحة عند النشر.
+    // داخل try/catch وبفحص الدعم أولاً، حتى لا يظهر أي خطأ في بيئة المعاينة أو عند غياب الملف.
+    try {
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          try {
+            navigator.serviceWorker.register("sw.js").catch(function () { /* غياب الملف أو رفض التسجيل: نتجاهل بصمت */ });
+          } catch (e) { /* لا شيء */ }
+        });
+      }
+    } catch (e) { /* لا شيء */ }
+
+    // زر «ثبّت التطبيق»: يظهر فقط عندما يعلن المتصفح إمكانية التثبيت (حدث beforeinstallprompt).
+    (function () {
+      var deferredPrompt = null;
+      var btn = document.getElementById("installBtn");
+      if (!btn) return;
+      window.addEventListener("beforeinstallprompt", function (e) {
+        e.preventDefault();           // نمنع الشريط التلقائي حتى نعرض الزر الصغير بدلاً منه
+        deferredPrompt = e;
+        btn.classList.add("show");
+      });
+      btn.addEventListener("click", function () {
+        if (!deferredPrompt) return;
+        try { deferredPrompt.prompt(); } catch (err) { /* لا شيء */ }
+        deferredPrompt = null;
+        btn.classList.remove("show");
+      });
+      window.addEventListener("appinstalled", function () {
+        deferredPrompt = null;
+        btn.classList.remove("show");
+      });
+    })();
     </script>
   </body>
 </html>

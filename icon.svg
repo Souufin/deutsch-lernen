@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="#1F5C38"/>
+  <text x="256" y="248" text-anchor="middle" dominant-baseline="central" font-family="DejaVu Sans, Verdana, sans-serif" font-weight="bold" font-size="210" fill="#F7EFDB">De</text>
+  <rect x="186" y="344" width="140" height="20" rx="10" fill="#E9A13B"/>
+</svg>
