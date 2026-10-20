@@ -307,6 +307,11 @@
       .vocab .de{font-size:1rem}
       .vocab .vp{color:var(--gold);font-weight:700;font-size:.85rem;margin-inline-start:6px}
       .vocab .va{display:block;color:var(--muted);font-size:.88rem}
+      /* ---------- articles ---------- */
+      .aspdbtn{padding:6px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:800;font-family:"Noto Sans",sans-serif;font-size:.85rem}
+      .aspdbtn[aria-pressed="true"]{background:var(--charcoal);color:#F7EFDB;border-color:var(--charcoal)}
+      @media (prefers-color-scheme: dark){.aspdbtn[aria-pressed="true"]{background:var(--gold);color:#241B08;border-color:var(--gold)}}
+      .sp .sp-de.verse{white-space:pre-line}
       /* ---------- bottom nav (mobile) ---------- */
       .bottomnav{display:none}
       @media(max-width:819px){
@@ -441,6 +446,16 @@
         <div class="storygrid" id="storyGrid"></div>
       </section>
 
+      <!-- ======= VIEW: articles ======= -->
+      <section class="view" id="view-articles" role="tabpanel">
+        <h2 class="sec">مقالات للاستماع والقراءة</h2>
+        <p class="sec-sub">نصوص ألمانية أصلية قصيرة من الملك العام، بصوت بشري حقيقي وتسجيلات <a class="srclink" href="https://librivox.org/fabeln-by-magnus-gottfried-lichtwer/" target="_blank" rel="noopener">LibriVox</a> — اسمع واقرا في نفس الوقت باش تقوّي الفهم والقراءة معاً.<br>
+        <b>طريقة التدريب:</b> اسمع المقال أولاً بلا ترجمة وحاول تفهم، من بعد شغّل الترجمة وقارن، وفي الأخير جاوب على أسئلة الفهم.</p>
+        <p class="sec-sub" style="display:flex;align-items:center;gap:7px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="flex:none" aria-hidden="true"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" fill="currentColor" stroke="none"/></svg><span>الاستماع للمقالات كيتبث مباشرة من Archive.org، فخاصك تكون متصل بالإنترنت باش تسمعها — أما الدروس والكلمات فخدامين بلا إنترنت.</span></p>
+        <p class="sec-sub" id="articlesProg" style="font-weight:700;color:var(--ok)"></p>
+        <div class="storygrid" id="articleGrid"></div>
+      </section>
+
       <!-- ======= VIEW: grammar ======= -->
       <section class="view" id="view-grammar" role="tabpanel">
         <h2 class="sec">القواعد بلا تعقيد</h2>
@@ -491,6 +506,31 @@
         </div>
       </div>
       <div class="sr-body"><div class="sr-in" id="srBody"></div></div>
+    </div>
+
+    <!-- ======= article reader ======= -->
+    <div class="sreader" id="articleReader" role="dialog" aria-modal="true" aria-label="قارئ المقالات">
+      <div class="sr-head">
+        <button class="p-close" id="artClose" aria-label="إغلاق المقال">✕</button>
+        <div>
+          <h3 id="artTitleAr"></h3>
+          <span class="de" id="artTitleDe"></span>
+        </div>
+        <span class="chip gold" id="artDur" style="margin-inline-start:auto"></span>
+      </div>
+      <div class="sr-audio">
+        <div class="in">
+          <audio id="articleAudio" controls preload="metadata" controlslist="nodownload"></audio>
+          <div class="sr-tools">
+            <span style="font-weight:700;color:var(--muted);font-size:.88rem">سرعة القراءة:</span>
+            <button class="aspdbtn" data-aspeed="0.7">0.7× أبطأ</button>
+            <button class="aspdbtn" data-aspeed="1" aria-pressed="true">1× عادية</button>
+            <button class="aspdbtn" data-aspeed="1.25">1.25×</button>
+            <button class="btn ghost" id="artToggleTr" style="margin-inline-start:auto;padding:7px 15px">إظهار الترجمة العربية</button>
+          </div>
+        </div>
+      </div>
+      <div class="sr-body"><div class="sr-in" id="artBody"></div></div>
     </div>
 
     <div class="toast" id="toast" role="status"></div>
@@ -1449,6 +1489,7 @@
       { id:"practice", label:"النطق والكتابة", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3.5 3.5 0 003.5-3.5v-5a3.5 3.5 0 10-7 0v5A3.5 3.5 0 0012 15z"/><path d="M5 11.5a7 7 0 0014 0M12 19v3"/></svg>' },
       { id:"coach", label:"المدرّب الذكي", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-8 8H4l2-3a8 8 0 1115-5z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01" stroke-width="3" stroke-linecap="round"/></svg>' },
       { id:"stories", label:"القصص", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h14v16H6a2 2 0 00-2 2z"/><path d="M4 19a2 2 0 012-2h14"/><path d="M9 7h7M9 11h5"/></svg>' },
+      { id:"articles", label:"المقالات", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13v16H4z"/><path d="M17 8h1a2 2 0 012 2v8a2 2 0 01-2 2"/><path d="M7 8h7M7 12h7M7 16h4"/></svg>' },
       { id:"grammar", label:"القواعد", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>' }
     ];
     function buildNav(){
@@ -2001,6 +2042,103 @@
       $("#srToggleTr").textContent = on ? "إخفاء الترجمة" : "إظهار الترجمة العربية";
     });
 
+    /* ==================== ARTICLES — listening & reading texts. Article 1: "Die Katzen und der Hausherr", a verse fable by Magnus Gottfried Lichtwer (1719–1783), from his "Fabeln" — public domain. Real human LibriVox recording read in German by marham63 (item fabeln_1905_librivox, section 22, 1:31). Audio is STREAMED from archive.org, not embedded — listening needs an internet connection. German text is the original poem (modern spelling); Arabic translations added for learning. ==================== */
+    const ARTICLES = [
+      { id:"katzen-hausherr", de:"Die Katzen und der Hausherr", ar:"القطط وربّ البيت", badge:"FABEL", num:22, mins:"1:31", level:"A2–B1", color:"#3F6B5C", audio:"https://archive.org/download/fabeln_1905_librivox/fabeln_022_lichtwer_64kb.mp3",
+        source:"https://librivox.org/fabeln-by-magnus-gottfried-lichtwer/",
+        about:"حكاية شعرية قصيرة للشاعر الألماني ليشتڤر — ومن سطرها الأخير خرج المثل الألماني المشهور: «الحماس الأعمى يضرّ فقط».",
+        vocab:[["die Katze","القطة","كاتسَه"],["der Hausherr","ربّ البيت / صاحب الدار","هاوسهير"],["der Eifer","الحماس / الاندفاع","آيفَر"],["blind","أعمى","بلينت"],["schaden","يضرّ","شادَن"],["der Schwarm","السرب / الحشد","شڤارْم"],["der Spiegel","المرآة","شبيغَل"],["der Prügel","الهراوة (عصا غليظة)","بْروغَل"],["die Zähne","الأسنان","تسينَه"],["erwachen","يستيقظ / يفيق","إرڤاخَن"]],
+        paras:[
+          ["Tier' und Menschen schliefen feste,\nSelbst der Hausprophete schwieg,\nAls ein Schwarm geschwänzter Gäste\nVon den nächsten Dächern stieg.","الحيوانات والناس كانو ناعسين نوماً عميقاً، وحتى «نبيّ الدار» سكت — وهو الديك اللي كيعلن بزوغ الصباح — وفي ديك اللحظة نزل سرب من الضيوف أصحاب الذيول من أقرب السطوح."],
+          ["In dem Vorsaal eines Reichen\nStimmten sie ihr Liedchen an,\nSo ein Lied, das Stein' erweichen,\nMenschen rasend machen kann.","في بهو دار واحد الرجل الغني، بداو يغنّيو أغنيتهم الصغيرة — أغنية كتلّين حتى الحجر، وكتقدر تجنّن الإنسان."],
+          ["Hinz, des Murners Schwiegervater,\nSchlug den Takt erbärmlich schön,\nUnd zwei abgelebte Kater\nQuälten sich, ihm beizustehn.","هينز، وهو حماة مورنر (ومورنر اسم القط المشهور في الحكايات)، كان كيضرب الإيقاع «بجمال يثير الشفقة»، وجوج قطط ذكور كبار في العمر ومهلوكين كانو كيتعذّبو باش يعاونوه."],
+          ["Endlich tanzten alle Katzen,\nPoltern, lärmen, dass es kracht,\nZischen, heulen, sprudeln, kratzen,\nBis der Herr im Haus erwacht.","وفي الأخير رقصو القطط كلهم: دقّ وضجيج حتى كيتشقّق كلشي، فحيح وعواء وفقاعات وخدش — حتى ناض ربّ البيت من النوم."],
+          ["Dieser springt mit einem Prügel\nIn dem finstern Saal herum,\nSchlägt um sich, zerstößt den Spiegel,\nWirft ein Dutzend Schalen um;","نقز هادا وهراوة في يدو وبدا كيدور في القاعة المظلمة، كيضرب في كل جهة، هرّس المرآة، وقلّب دستة كاملة من الأواني؛"],
+          ["Stolpert über ein'ge Späne,\nStürzt im Fallen auf die Uhr,\nUnd zerbricht zwei Reihen Zähne:\nBlinder Eifer schadet nur.","تعثّر فوق شي شظايا متناثرة، وطاح وهو كيطيح على الساعة، وكسّر صفّين من سنانو: الحماس الأعمى ما كيدير غير الضرر."]
+        ],
+        quiz:[
+          { q:"علاش ناض ربّ البيت من النوم في وسط الليل؟", opts:["القطط دارت حفلة موسيقية صاخبة في بهو دارو","الكلب كان كينبح بلا توقف","سمع صوت الرعد"] , right:0, why:"القطط غنّات ورقصات ودارت ضجيجاً كبيراً: »Bis der Herr im Haus erwacht« — حتى ناض ربّ البيت." },
+          { q:"شنو وقع لربّ البيت وهو كيجري في الظلام بالهراوة؟", opts:["طرد القطط وما تخدش حتى خدش","هرّس المرآة وقلّب الأواني وكسّر صفّين من سنانو","طاح في البير"] , right:1, why:"في الظلام كان كيضرب حوليه بلا ما يشوف: هرّس المرآة، قلّب دستة من الأواني، تعثّر وطاح على الساعة وكسّر صفّين من سنانو." },
+          { q:"شنو هو المثل اللي خرج من هاد الحكاية؟", opts:["القطط كتحب الموسيقى","Blinder Eifer schadet nur — الحماس الأعمى يضرّ فقط","الليل للنوم والنهار للخدمة"] , right:1, why:"Eifer (آيفَر) معناها الحماس، وschadet (شادَت) معناها يضرّ: الاندفاع الأعمى بلا تفكير كيرجع بالضرر على صاحبو." }
+        ] }
+    ];
+    let curArticle = null;
+    const artHeard = new Set();
+    function renderArticles(){
+      $("#articlesProg").textContent = artHeard.size ? "سمعتي " + artHeard.size + " من " + ARTICLES.length + " مقالات — واصل!" : "";
+      $("#articleGrid").innerHTML = ARTICLES.map(a=>{
+        const heard = artHeard.has(a.id);
+        return `<button class="storycard${heard?" heard":""}" data-article="${a.id}">
+          <span class="khm" style="background:${a.color}"><span>${a.badge}</span><b>${a.num}</b></span>
+          <span><h4>${esc(a.ar)}</h4><p><span class="de" dir="ltr">${esc(a.de)}</span></p><p>${esc(a.about)}</p>
+          <span class="meta"><span class="chip">${a.level}</span>${heard?'<span class="heardtag">✓ سمعتيه</span>':""}</span></span>
+          <span class="dur"><b>${a.mins}</b>دقيقة</span>
+        </button>`;
+      }).join("");
+      $$("[data-article]").forEach(b=>b.addEventListener("click",()=>openArticle(b.dataset.article)));
+    }
+    function markArtHeard(){
+      if (!curArticle) return;
+      if (!artHeard.has(curArticle.id)){
+        artHeard.add(curArticle.id);
+        addXp(30); state.activity++; updateStats();
+        toast("أحسنت! سجلتي مقالاً جديداً +30 XP");
+      }
+      const btn = $("#artHeard"); if (btn) btn.textContent = "✓ سمعتي هاد المقال — أحسنت!";
+      renderArticles();
+    }
+    function openArticle(id){
+      const a = ARTICLES.find(x=>x.id===id); if(!a) return;
+      curArticle = a;
+      $("#artTitleAr").textContent = a.ar;
+      $("#artTitleDe").textContent = a.de;
+      $("#artDur").textContent = "⏱ " + a.mins;
+      const au = $("#articleAudio"); au.src = a.audio; au.playbackRate = 1;
+      $$(".aspdbtn").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.aspeed==="1")));
+      $("#artToggleTr").textContent = "إظهار الترجمة العربية";
+      const body = $("#artBody"); body.classList.remove("showtr");
+      body.innerHTML = `
+        <p class="narr">حكاية شعرية للشاعر الألماني <b>Magnus Gottfried Lichtwer</b> (ماغنوس غوتفريد ليشتڤر، 1719–1783) من كتابه <span class="de" dir="ltr">Fabeln</span>. يرويها بصوت بشري حقيقي: <b>marham63</b> — تسجيل <a class="srclink" href="${a.source}" target="_blank" rel="noopener">LibriVox</a> (الملك العام)، والنص الألماني الأصلي من الملك العام. اسمع أولاً بلا ترجمة، من بعد شغّل الترجمة وقارن.</p>
+        <h3 style="margin:16px 0 4px">كلمات مهمة من المقال</h3>
+        <div class="vocabgrid">${a.vocab.map(v=>`<span class="vocab"><span class="de">${esc(v[0])}</span><span class="vp">${esc(v[2])}</span><span class="va">${esc(v[1])}</span></span>`).join("")}</div>
+        <h3 style="margin:20px 0 10px">النص — اسمع واقرا مع الراوي</h3>
+        ${a.paras.map(p=>`<div class="sp"><p class="sp-de verse">${esc(p[0]).replace(/\n/g,"<br>")}</p><p class="sp-ar">${esc(p[1])}</p></div>`).join("")}
+        <div class="quiz"><p style="margin:0">المثل اللي خرج من هاد الحكاية: <span class="de" dir="ltr" style="font-size:1.05rem">Blinder Eifer schadet nur</span> — الحماس الأعمى يضرّ فقط. <span style="color:var(--muted);font-weight:600">الاندفاع والغضب بلا تفكير كيرجعو بالضرر على صاحبهم، بحال ربّ البيت اللي ضرّ نفسو ودارو أكثر من القطط.</span></p></div>
+        <button class="btn" id="artHeard" style="width:100%;margin:14px 0 4px">${artHeard.has(a.id)?"✓ سمعتي هاد المقال — أحسنت!":"سمعت المقال كامل ✓ (+30 XP)"}</button>
+        <h3 style="margin:22px 0 4px">أسئلة الفهم — واش فهمتي؟</h3>
+        ${a.quiz.map((q,qi)=>`<div class="quiz"><p>${esc(q.q)}</p><div class="opts">${q.opts.map((o,oi)=>`<button class="opt" data-aq="${qi}:${oi}">${esc(o)}</button>`).join("")}</div><div class="feedback" data-afb="${qi}"></div></div>`).join("")}`;
+      $("#artHeard").addEventListener("click", markArtHeard);
+      body.querySelectorAll("[data-aq]").forEach(b=>b.addEventListener("click",()=>{
+        const parts = b.dataset.aq.split(":").map(Number);
+        const q = curArticle.quiz[parts[0]];
+        const fb = body.querySelector('[data-afb="' + parts[0] + '"]');
+        const ok = parts[1] === q.right;
+        b.classList.add(ok?"right":"wrong");
+        fb.className = "feedback show " + (ok?"ok":"no");
+        fb.textContent = (ok?"صحيح! ":"ليس تماماً. ") + q.why;
+        if (ok && !b.dataset.done){ b.dataset.done="1"; addXp(10); state.activity++; updateStats(); }
+      }));
+      $("#articleReader").classList.add("on");
+      document.body.style.overflow = "hidden";
+      $("#articleReader .sr-body").scrollTop = 0;
+    }
+    function closeArticle(){
+      const au = $("#articleAudio"); au.pause(); au.removeAttribute("src"); au.load();
+      $("#articleReader").classList.remove("on");
+      document.body.style.overflow = "";
+      curArticle = null;
+    }
+    $("#artClose").addEventListener("click", closeArticle);
+    $("#articleAudio").addEventListener("ended", ()=>{ if (curArticle) markArtHeard(); });
+    $$(".aspdbtn").forEach(b=>b.addEventListener("click",()=>{
+      $("#articleAudio").playbackRate = parseFloat(b.dataset.aspeed);
+      $$(".aspdbtn").forEach(x=>x.setAttribute("aria-pressed", String(x===b)));
+    }));
+    $("#artToggleTr").addEventListener("click",()=>{
+      const on = $("#artBody").classList.toggle("showtr");
+      $("#artToggleTr").textContent = on ? "إخفاء الترجمة" : "إظهار الترجمة العربية";
+    });
+
     /* ==================== init ==================== */
     buildNav();
     renderPath();
@@ -2011,6 +2149,7 @@
     renderQA();
     renderGrammar();
     renderStories();
+    renderArticles();
     updateStats();
     showView("path");
     $("#chatBox").innerHTML = "";
