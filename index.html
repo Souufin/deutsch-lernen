@@ -199,6 +199,8 @@
       table.ct{border-collapse:collapse;width:100%;margin:12px 0;font-size:.97rem}
       table.ct th,table.ct td{border:1px solid var(--line);padding:8px 11px;text-align:start}
       table.ct th{background:var(--surface2)}
+      table.ct.verbs{table-layout:fixed}
+      table.ct.verbs td{overflow-wrap:break-word}
       .exrow{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:9px 13px;margin:8px 0}
       .exrow .de{font-size:1.05rem}
       .exrow .ar{color:var(--muted);font-size:.9rem}
@@ -848,7 +850,36 @@
         table:[["ich","kann","muss"],["du","kannst","musst"],["er/sie/es","kann","muss"],["wir","können","müssen"]],
         tableHead:["الضمير","können","müssen"],
         ex:[["Ich muss gehen","يجب أن أذهب"],["Kannst du mir helfen?","هل تستطيع مساعدتي؟"],["Wir möchten zahlen","نودّ أن ندفع"]],
-        quiz:{ q:"أكمل: Er ___ Deutsch sprechen. (يستطيع)", opts:["kann","kannst"], right:0, why:"مع er/sie/es كنستعملو kann بلا نهاية." } }
+        quiz:{ q:"أكمل: Er ___ Deutsch sprechen. (يستطيع)", opts:["kann","kannst"], right:0, why:"مع er/sie/es كنستعملو kann بلا نهاية." } },
+      { title:"الأفعال المنفصلة (trennbare Verben)", body:`
+        <p>بعض الأفعال الألمانية مركّبة من جوج أجزاء: <b>بادئة</b> صغيرة في الأول زائد فعل. والحاجة الذكية فيهم أن هاد البادئة <b>كتنفصل</b> على الفعل ملي كنستعملوه في الجملة، وكتمشي تسكن في <b>آخر الجملة</b>! بحال <span class="de">aufstehen</span> (أوفْشْتِيهِن) = ينهض من النوم: البادئة هي <span class="de">auf</span> (أوف) والفعل هو <span class="de">stehen</span> (شْتِيهِن: يقف).</p>
+        <p><b>القاعدة الذهبية:</b> في الجملة العادية في المضارع، الفعل المصرّف كيبقى في <b>المرتبة الثانية</b>، والبادئة كترحل لآخر الجملة: <span class="de">Ich stehe um sieben Uhr auf.</span> (أنا أنهض على الساعة السابعة).</p>
+        <p><b>في السؤال</b> نفس الفكرة — البادئة كتبقى في الآخر: <span class="de">Stehst du früh auf?</span> (واش كتنوض بكري؟)</p>
+        <p><b>ولكن انتبه:</b> ملي كيكون معانا فعل مساعد بحال <span class="de">müssen</span> (موسِّن: يجب)، <span class="de">können</span> (كونِّن: يقدر) أو <span class="de">möchten</span> (موشتِن: يودّ)، الفعل المنفصل <b>كيبقى كاملاً وما كيتقسمش</b>، وكيبقى في آخر الجملة بصيغة المصدر: <span class="de">Ich muss früh aufstehen.</span> (خاصني ننوض بكري).</p>
+        <p><b>عشرة أفعال منفصلة غادي تسمعها كل نهار:</b></p>
+        <table class="ct verbs">
+          <colgroup><col style="width:23%"><col style="width:20%"><col style="width:19%"><col style="width:38%"></colgroup>
+          <tr><th>الفعل</th><th>النطق</th><th>المعنى</th><th>مثال</th></tr>
+          <tr><td><span class="de">aufstehen</span></td><td>أوفْشْتِيهِن</td><td>ينهض</td><td><span class="de">Ich stehe um sieben Uhr auf.</span><br>أنا أنهض على الساعة السابعة.</td></tr>
+          <tr><td><span class="de">ankommen</span></td><td>أنْكومِّن</td><td>يصل</td><td><span class="de">Der Zug kommt um zehn Uhr an.</span><br>القطار يصل على الساعة العاشرة.</td></tr>
+          <tr><td><span class="de">abfahren</span></td><td>أبْفارِن</td><td>يغادر / ينطلق</td><td><span class="de">Der Bus fährt um acht Uhr ab.</span><br>الحافلة تنطلق على الساعة الثامنة.</td></tr>
+          <tr><td><span class="de">einsteigen</span></td><td>أينْشْتايْغِن</td><td>يركب (وسيلة نقل)</td><td><span class="de">Wir steigen in den Bus ein.</span><br>نحن نركب الحافلة.</td></tr>
+          <tr><td><span class="de">aussteigen</span></td><td>أوسْشْتايْغِن</td><td>ينزل (من وسيلة نقل)</td><td><span class="de">Ich steige am Bahnhof aus.</span><br>أنا أنزل في المحطة.</td></tr>
+          <tr><td><span class="de">anrufen</span></td><td>أنْروفِن</td><td>يتصل هاتفياً</td><td><span class="de">Ich rufe meine Mutter an.</span><br>أنا أتصل بأمي هاتفياً.</td></tr>
+          <tr><td><span class="de">mitkommen</span></td><td>ميتْكومِّن</td><td>يأتي مع</td><td><span class="de">Kommst du mit?</span><br>واش غادي تجي معانا؟</td></tr>
+          <tr><td><span class="de">einkaufen</span></td><td>أينْكاوفِن</td><td>يتسوق</td><td><span class="de">Wir kaufen am Samstag ein.</span><br>نحن نتسوق يوم السبت.</td></tr>
+          <tr><td><span class="de">aufmachen</span></td><td>أوفْماخِن</td><td>يفتح</td><td><span class="de">Mach bitte das Fenster auf!</span><br>افتح النافذة من فضلك!</td></tr>
+          <tr><td><span class="de">fernsehen</span></td><td>فيرنْزيهِن</td><td>يشاهد التلفاز</td><td><span class="de">Abends sehen wir fern.</span><br>في المساء نشاهد التلفاز.</td></tr>
+        </table>
+        <p><b>تنبيه صغير:</b> <span class="de">fernsehen</span> بادئتها هي <span class="de">fern</span> (فيرن)، ففي المضارع كتولي: <span class="de">Wir sehen fern.</span> — الفعل sehen في المرتبة الثانية، والبادئة fern في الآخر، بحال القاعدة بالضبط.</p>`,
+        ex:[["Ich stehe um sieben Uhr auf","أنا أنهض على الساعة السابعة"],["Stehst du früh auf?","واش كتنوض بكري؟"],["Ich muss früh aufstehen","خاصني ننوض بكري"],["Wir sehen fern","نحن نشاهد التلفاز"]],
+        quizzes:[
+          { q:"أكمل الجملة: Ich ___ um sieben Uhr ___.", opts:["Ich stehe um sieben Uhr auf","Ich auf um sieben Uhr stehe"], right:0, why:"الفعل المصرّف stehe في المرتبة الثانية، والبادئة auf كتمشي لآخر الجملة." },
+          { q:"أكمل الجملة: Der Zug ___ um zehn Uhr ___.", opts:["kommt … an","an … kommt"], right:0, why:"ankommen كيتقسم: kommt في المرتبة الثانية، والبادئة an في الآخر." },
+          { q:"شنو هي الجملة الصحيحة مع الفعل المساعد müssen؟", opts:["Ich muss früh aufstehen","Ich muss früh auf stehe"], right:0, why:"مع فعل مساعد، الفعل المنفصل كيبقى كاملاً في آخر الجملة وما كيتقسمش." },
+          { q:"أكمل بالبادئة الصحيحة: Ich rufe meine Mutter ___.", opts:["an","auf"], right:0, why:"الفعل هو anrufen (أنْروفِن) — بادئتو an، ماشي auf." },
+          { q:"أكمل بالبادئة الصحيحة: Abends sehen wir ___.", opts:["fern","ein"], right:0, why:"fernsehen بادئتو fern: Abends sehen wir fern." }
+        ] }
     ];
     </script>
 
@@ -1947,21 +1978,21 @@
             ${g.tableHead?`<table class="ct"><tr>${g.tableHead.map(h=>`<th>${esc(h)}</th>`).join("")}</tr>${g.table.map(r=>`<tr><td>${esc(r[0])}</td>${r.slice(1).map(c=>`<td><span class="de">${esc(c)}</span></td>`).join("")}</tr>`).join("")}</table>`:
               (g.table?`<table class="ct">${g.table.map(r=>`<tr><td><span class="de">${esc(r[0])}</span></td><td>${esc(r[1])}</td></tr>`).join("")}</table>`:"")}
             ${g.ex.map(e=>`<div class="exrow"><span><span class="de">${esc(e[0])}</span><br><span class="ar">${esc(e[1])}</span></span><button class="iconbtn" data-gspeak="${esc(e[0])}" aria-label="اسمع المثال">${ICON_SPEAK}</button></div>`).join("")}
-            <div class="quiz"><p>تمرين سريع: ${esc(g.quiz.q)}</p>
-              <div class="opts">${g.quiz.opts.map((o,oi)=>`<button class="opt" data-gq="${i}:${oi}"><span class="de" style="font-size:.98rem">${esc(o)}</span></button>`).join("")}</div>
-              <div class="feedback" data-gfb="${i}"></div>
-            </div>
+            ${(g.quizzes||[g.quiz]).map((q,qi)=>`<div class="quiz"><p>تمرين سريع: ${esc(q.q)}</p>
+              <div class="opts">${q.opts.map((o,oi)=>`<button class="opt" data-gq="${i}:${qi}:${oi}"><span class="de" style="font-size:.98rem">${esc(o)}</span></button>`).join("")}</div>
+              <div class="feedback" data-gfb="${i}:${qi}"></div>
+            </div>`).join("")}
           </div>
         </div>`).join("");
       $$("[data-gtoggle]").forEach(b=>b.addEventListener("click",()=>{ b.closest(".gtopic").classList.toggle("open"); }));
       $$("[data-gspeak]").forEach(b=>b.addEventListener("click",()=>speak(b.dataset.gspeak)));
       $$("[data-gq]").forEach(b=>b.addEventListener("click",()=>{
-        const [gi, oi] = b.dataset.gq.split(":").map(Number);
-        const g = GRAMMAR[gi], fb = $(`[data-gfb="${gi}"]`);
-        const ok = oi === g.quiz.right;
+        const [gi, qi, oi] = b.dataset.gq.split(":").map(Number);
+        const g = GRAMMAR[gi], q = (g.quizzes||[g.quiz])[qi], fb = $(`[data-gfb="${gi}:${qi}"]`);
+        const ok = oi === q.right;
         b.classList.add(ok?"right":"wrong");
         fb.className = "feedback show " + (ok?"ok":"no");
-        fb.textContent = (ok?"صحيح! ":"ليس تماماً. ") + g.quiz.why;
+        fb.textContent = (ok?"صحيح! ":"ليس تماماً. ") + q.why;
         if (ok && !b.dataset.done){ b.dataset.done="1"; state.xp+=10; state.activity++; updateStats(); }
       }));
     }
