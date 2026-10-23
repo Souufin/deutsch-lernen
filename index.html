@@ -567,6 +567,15 @@
         <div class="v2card"><h3>💡 قواعد سريعة</h3><p>• <b class="de">ß</b> كيتنطق بحال <b class="de">ss</b>، وكيجي غير من بعد صوت طويل، وعمره ما كيبدا كلمة. مثال: <span class="de">Straße</span> (الشارع).<br>• <b class="de">U</b> عادية، و <b class="de">Ü</b> كتدير شفايفك مدورة بحال بغيتي تقول U، ولكن لسانك بحال I.<br>• <b class="de">Ö</b> بحال O ولكن شفايف مدورة ولسان قدام.<br>• <b class="de">Ä</b> قريبة من E المفتوحة، بحال “آي” خفيفة.<br>• <b class="de">CH</b> من بعد A/O/U كتكون خشنة، ومن بعد E/I كتكون رطبة وخفيفة.<br>• <b class="de">SCH</b> = “ش”، و <b class="de">SP/ST</b> في أول الكلمة = “شب/شت”.</p></div>
       </section>
 
+      <!-- ======= VIEW: placement (v2, ANAPEC-inspired, original content) ======= -->
+      <section class="view" id="view-placement" role="tabpanel">
+        <h2 class="sec">تحديد المستوى والمسار المهني</h2>
+        <p class="sec-sub">اختبر مستواك أولاً، ومن بعد كمّل من مستواك على وتيرتك — ماشي من الصفر ديما.</p>
+        <div class="v2btnrow" id="v2PlaceMenu"></div>
+        <div id="v2PlacePanel"></div>
+        <div class="v2card" id="v2PlaceResume"></div>
+      </section>
+
     </div>
 
     <!-- ======= bottom nav (mobile) ======= -->
@@ -1701,7 +1710,8 @@
       { id:"speaking", label:"التحدث", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3.5 3.5 0 003.5-3.5v-5a3.5 3.5 0 10-7 0v5A3.5 3.5 0 0012 15z"/><path d="M5 11.5a7 7 0 0014 0M12 19v3"/></svg>' },
       { id:"exams", label:"الامتحانات", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>' },
       { id:"notebook", label:"دفتري", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V6a2 2 0 012-2h13v13H6a2 2 0 00-2 2zm0 0a2 2 0 002 2h13"/></svg>' },
-      { id:"alphabet", label:"الحروف", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V6l6 9V6"/></svg>' }
+      { id:"alphabet", label:"الحروف", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V6l6 9V6"/></svg>' },
+      { id:"placement", label:"تحديد المستوى", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>' }
     ];
     function buildNav(){
       $("#tabsNav").innerHTML = VIEWS.map((v,i)=>`<button class="tab" role="tab" data-view="${v.id}" aria-selected="${i===0}">${v.icon}${v.label}</button>`).join("");
@@ -2803,6 +2813,84 @@
       v2Today(); renderWriting(); renderSpeaking(); renderExams(); renderToday(); renderNotebook(); renderAlphabet(); v2PatchReaders();
     }
 
+    /* ==================== v2: placement test, personal path, professional units, certificate ==================== */
+    /* Original content only. No ANAPEC or Goethe texts copied. Certificate is local-only, never official. */
+    if (!v2.placement) v2.placement = {level:"", score:0, total:0, date:""};
+    if (!v2.lastView) v2.lastView = "";
+    document.addEventListener("click", e=>{ const b = e.target.closest && e.target.closest("[data-view]"); if (b && b.dataset.view) { v2.lastView = b.dataset.view; saveV2(); } });
+    const V2PLACE_QS = [
+      {lvl:"A0", q:"شنو معنى Guten Morgen؟", opts:["صباح الخير","مساء الخير","إلى اللقاء"], ans:0},
+      {lvl:"A0", q:"شنو معنى Ich heiße Anna؟", opts:["أنا اسمي آنا","أنا من ألمانيا","أنا أحب آنا"], ans:0},
+      {lvl:"A0", q:"كلمة Wasser كتعني؟", opts:["ماء","خبز","بيت"], ans:0},
+      {lvl:"A0", q:"شنو هو العدد drei؟", opts:["3","2","5"], ans:0},
+      {lvl:"A1", q:"الجملة الصحيحة هي؟", opts:["Ich wohne in Mohammedia.","Ich wohnen in Mohammedia.","Ich wohnt in Mohammedia."], ans:0},
+      {lvl:"A1", q:"شنو معنى Ich lerne Deutsch؟", opts:["أنا أتعلم الألمانية","أنا أتكلم الفرنسية","أنا أحب ألمانيا"], ans:0},
+      {lvl:"A1", q:"شنو هو جمع das Buch؟", opts:["die Bücher","die Buchs","der Bücher"], ans:0},
+      {lvl:"A1", q:"متى كنستعملوا Perfekt؟", opts:["للماضي القريب","للمستقبل","للأمر"], ans:0},
+      {lvl:"A2", q:"شنو معنى Ich habe gestern einen Brief geschrieben؟", opts:["كتبت رسالة البارح","سأكتب رسالة غداً","أنا أكتب رسالة الآن"], ans:0},
+      {lvl:"A2", q:"الجملة الصحيحة مع weil هي؟", opts:["Ich bleibe zu Hause, weil ich krank bin.","Ich bleibe zu Hause, weil ich bin krank.","Ich bleibe zu Hause, weil krank ich bin."], ans:0},
+      {lvl:"A2", q:"شنو معنى die Bewerbung؟", opts:["طلب توظيف / ترشيح","فاتورة","موعد طبي"], ans:0},
+      {lvl:"A2", q:"شنو هو عكس früh؟", opts:["spät","schnell","groß"], ans:2}
+    ];
+    const V2PRO = [
+      {name:"💼 مقابلة عمل", vocab:[["die Bewerbung","طلب التوظيف"],["die Erfahrung","التجربة"],["der Lebenslauf","السيرة الذاتية"],["die Stelle","المنصب"],["pünktlich","في الوقت"]], dlg:"Chef: Guten Tag! Erzählen Sie bitte von sich. Bewerber: Guten Tag! Ich heiße Soufiane. Ich habe Erfahrung als Verkäufer. Ich lerne Deutsch, weil ich in Deutschland arbeiten möchte.", q:"شنو كيدير المترشح في المقابلة؟", opts:["كيعرّف بنفسه وبتجربته","كيطلب زيادة","كيشكي من الشغل"], ans:0},
+      {name:"🏢 في الشركة", vocab:[["die Besprechung","الاجتماع"],["der Kollege","الزميل"],["die Aufgabe","المهمة"],["der Chef","المدير"],["zusammenarbeiten","يتعاون"]], dlg:"Kollege: Guten Morgen! Haben wir heute eine Besprechung? Chef: Ja, um 10 Uhr. Bitte bringen Sie die Unterlagen mit.", q:"إمتى الاجتماع؟", opts:["مع 10","مع 9","مع 11"], ans:0},
+      {name:"🛎️ مع الزبون", vocab:[["der Kunde","الزبون"],["freundlich","لطيف / ودود"],["helfen","يساعد"],["der Preis","الثمن"],["die Rechnung","الفاتورة"]], dlg:"Verkäufer: Guten Tag! Kann ich Ihnen helfen? Kunde: Ja, ich suche ein Geschenk. Verkäufer: Gern! Wie viel möchten Sie ausgeben?", q:"شنو بغا الزبون؟", opts:["هدية","فاتورة","موعد"], ans:0},
+      {name:"📄 السيرة الذاتية", vocab:[["der Name","الاسم"],["die Ausbildung","التكوين"],["die Sprache","اللغة"],["das Ziel","الهدف"],["die Unterschrift","التوقيع"]], dlg:"Ich heiße Soufiane. Ich habe eine Ausbildung in Elektrotechnik. Ich spreche Arabisch, Französisch und ein bisschen Deutsch. Mein Ziel ist eine Arbeit in Deutschland.", q:"شنو تكوين صاحب السيرة؟", opts:["الكهرباء الصناعية","الطب","التعليم"], ans:0}
+    ];
+    function v2PlaceLevel(score){
+      if (score >= 9) return "A2";
+      if (score >= 5) return "A1";
+      return "A0";
+    }
+    function v2PlaceNextDate(){
+      if (!v2.placement.date) return "";
+      const d = new Date(v2.placement.date); d.setDate(d.getDate() + 30);
+      return d.toLocaleDateString("ar-MA");
+    }
+    function renderPlacement(){
+      $("#v2PlaceMenu").innerHTML = '<button class="btn green" data-pl="test">📝 اختبار تحديد المستوى</button><button class="btn ghost" data-pl="pro">💼 وحدات مهنية</button><button class="btn ghost" data-pl="cert">🎓 شهادة الإتمام</button>';
+      $$("#v2PlaceMenu [data-pl]").forEach(b=>b.addEventListener("click", ()=>showPlacement(b.dataset.pl)));
+      const r = $("#v2PlaceResume");
+      const lastLabel = {path:"مسار التعلم", cards:"البطاقات", practice:"النطق والكتابة", coach:"المدرّب الذكي", stories:"القصص", articles:"المقالات", grammar:"القواعد", today:"اليوم", writing:"الكتابة", speaking:"التحدث", exams:"الامتحانات", notebook:"دفتري", alphabet:"الحروف", placement:"تحديد المستوى"}[v2.lastView] || "";
+      r.innerHTML = v2.placement.level
+        ? '<h3>🧭 مسارك الشخصي</h3><p>مستواك الحالي: <b>' + esc(v2.placement.level) + '</b> (نتيجة الاختبار: ' + v2.placement.score + ' من ' + v2.placement.total + ')</p><p>ابدأ من مستواك، وتقدم على وتيرتك. <b>اقتراح إعادة الاختبار بعد 30 يوماً:</b> ' + (v2PlaceNextDate() || "—") + ' — باش تشوف تقدمك. إعادة الاختبار متاحة في أي وقت من الزر فوق.</p>' + (lastLabel ? '<button class="btn green" onclick="showView(\'' + esc(v2.lastView) + '\')">▶ استئناف من حيث توقفت: ' + esc(lastLabel) + '</button>' : '<button class="btn green" onclick="showView(\'path\')">ابدأ المسار ←</button>')
+        : '<h3>🧭 مسارك الشخصي</h3><p>ما زال ما درتي اختبار تحديد المستوى. دير الاختبار فوق، وغادي نحدد لك منين تبدا.</p><button class="btn green" onclick="showView(\'path\')">ابدأ من المسار العام ←</button>';
+      showPlacement("test");
+    }
+    function showPlacement(kind){
+      const p = $("#v2PlacePanel"); if (!p) return;
+      if (kind === "test") {
+        p.innerHTML = '<div class="v2card"><h3>📝 اختبار تحديد المستوى (12 سؤالاً، متدرجة الصعوبة)</h3><p>جاوب بصراحة، بلا مساعدة — النتيجة كتحدد لك المسار، ماشي العقوبة. آخر نتيجة: ' + (v2.placement.level ? esc(v2.placement.level) + ' (' + v2.placement.score + '/' + v2.placement.total + ')' : 'لا توجد') + '</p><div id="v2PlaceQs">' + V2PLACE_QS.map((q,i)=>'<div class="v2card"><p><span class="v2pill">' + q.lvl + '</span> <b>' + esc(q.q) + '</b></p><div class="v2btnrow">' + q.opts.map((o,oi)=>'<button class="btn ghost" data-pq="' + i + ':' + oi + '">' + esc(o) + '</button>').join("") + '</div></div>').join("") + '</div><button class="btn green" id="v2PlaceDone">اعرف مستواي ✓</button><div id="v2PlaceFb"></div></div>';
+        const ans = {};
+        $$("[data-pq]").forEach(b=>b.addEventListener("click", ()=>{ const [i,oi] = b.dataset.pq.split(":").map(Number); ans[i] = oi; }));
+        $("#v2PlaceDone").onclick = ()=>{
+          let score = 0; V2PLACE_QS.forEach((q,i)=>{ if (ans[i] === q.ans) score++; });
+          const lvl = v2PlaceLevel(score);
+          v2.placement = {level:lvl, score:score, total:V2PLACE_QS.length, date:new Date().toISOString()}; saveV2();
+          $("#v2PlaceFb").innerHTML = '<b>نتيجتك: ' + score + ' من ' + V2PLACE_QS.length + ' — مستواك: ' + lvl + '</b><br>المسار المقترح: ' + (lvl === "A0" ? 'ابدأ من الحروف والمسار A1.' : lvl === "A1" ? 'ابدأ من دروس A1، وراجع الحروف عند الحاجة.' : 'ابدأ من دروس A2 والوحدات المهنية.') + '<br>📅 اقتراح إعادة الاختبار بعد 30 يوماً: ' + v2PlaceNextDate();
+          toast("مستواك: " + lvl + " 🎉"); renderPlacement();
+        };
+      } else if (kind === "pro") {
+        p.innerHTML = '<div class="v2card"><h3>💼 وحدات مهنية — للشغل، ماشي غير الحياة اليومية</h3></div>' + V2PRO.map((u,i)=>'<div class="v2card"><h3>' + esc(u.name) + '</h3><p>' + u.vocab.map(v=>'<span class="de" dir="ltr">' + esc(v[0]) + '</span> — ' + esc(v[1]) + '<br>').join("") + '</p><p class="de" dir="ltr" style="font-size:1.05rem">' + esc(u.dlg) + '</p><div class="v2btnrow"><button class="btn ghost" data-proh="' + i + '">🔊 اسمع الحوار</button></div><p><b>' + esc(u.q) + '</b></p><div class="v2btnrow">' + u.opts.map((o,oi)=>'<button class="btn ghost" data-proq="' + i + ':' + oi + '">' + esc(o) + '</button>').join("") + '</div><div class="v2fb" data-prof="' + i + '"></div></div>').join("");
+        $$("[data-proh]").forEach(b=>b.addEventListener("click", ()=>v2SpeakDe(V2PRO[Number(b.dataset.proh)].dlg, 1)));
+        $$("[data-proq]").forEach(b=>b.addEventListener("click", ()=>{ const [i,oi] = b.dataset.proq.split(":").map(Number); const fb = document.querySelector('[data-prof="' + i + '"]'); if (oi === V2PRO[i].ans) { fb.textContent = "✅ صحيح! " + v2Cheer(); try { addXp(15); updateStats(); } catch(e) {} } else { fb.textContent = "❌ عاود اقرا الحوار بشوية."; } }));
+      } else if (kind === "cert") {
+        const doneA1 = v2.exams && v2.exams.a1w && v2.exams.a1s;
+        const doneA2 = v2.exams && v2.exams.a2w && v2.exams.a2s;
+        p.innerHTML = '<div class="v2card"><h3>🎓 شهادة إتمام محلية (للطباعة)</h3><p>⚠️ <b>توضيح مهم:</b> هذه شهادة إتمام من تطبيق «أداة تعلم الألمانية» نفسه فقط. <b>ليست شهادة رسمية من ANAPEC ولا من Goethe</b>، ولا تعادل أي اعتماد أو دبلوم رسمي، ولا يمكن استعمالها كوثيقة رسمية.</p><p>الشهادة متاحة فقط عند إكمال مستوى في الامتحانات التجريبية: A1 ' + (doneA1 ? '✅ مكتمل' : '❌ غير مكتمل — سالي امتحان A1 كتابة ومحادثة') + ' · A2 ' + (doneA2 ? '✅ مكتمل' : '❌ غير مكتمل') + '</p><label>اسمك كما تريده في الشهادة</label><input class="v2input" id="v2CertName" placeholder="مثال: Soufiane Fallah"><div class="v2btnrow" style="margin-top:10px"><button class="btn green" data-cert="A1" ' + (doneA1 ? '' : 'disabled') + '>اطبع شهادة A1</button><button class="btn green" data-cert="A2" ' + (doneA2 ? '' : 'disabled') + '>اطبع شهادة A2</button></div><p class="sec-sub">الطباعة تفتح نافذة جديدة فيها الشهادة فقط، مع نفس التوضيح — اطبعها أو احفظها PDF من المتصفح.</p></div>';
+        $$("[data-cert]").forEach(b=>b.addEventListener("click", ()=>{
+          const lvl = b.dataset.cert; const name = $("#v2CertName").value.trim() || "المتعلم";
+          const date = new Date().toLocaleDateString("ar-MA");
+          const w = window.open("", "_blank");
+          if (!w) { toast("اسمح بالنوافذ المنبثقة باش تطبع الشهادة"); return; }
+          w.document.write('<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>شهادة إتمام ' + lvl + '</title><style>body{font-family:system-ui,sans-serif;text-align:center;padding:40px;color:#262219} .box{border:4px solid #1F5C38;border-radius:20px;padding:40px} h1{color:#1F5C38} .disc{font-size:13px;color:#666;border-top:1px solid #ccc;margin-top:30px;padding-top:12px}</style></head><body><div class="box"><h1>🎓 شهادة إتمام</h1><p>يشهد تطبيق «أداة تعلم الألمانية» أن</p><h2>' + name.replace(/</g,"&lt;") + '</h2><p>أكمل مستوى <b>' + lvl + '</b> في الامتحانات التجريبية داخل التطبيق، بتاريخ ' + date + '.</p><p class="disc">توضيح: هذه شهادة إتمام محلية من التطبيق نفسه فقط. ليست شهادة رسمية من ANAPEC ولا من Goethe، ولا تعادل أي اعتماد أو دبلوم رسمي.</p></div><script>window.onload=function(){window.print()}<\/script></body></html>');
+          w.document.close();
+        }));
+      }
+    }
+    function v2PlacementInit(){ try { renderPlacement(); } catch(e) { console.error(e); } }
+
     /* ==================== init ==================== */
     buildNav();
     renderPath();
@@ -2815,6 +2903,7 @@
     renderStories();
     renderArticles();
     try { v2Init(); } catch(e) { console.error(e); }
+    try { v2PlacementInit(); } catch(e) { console.error(e); }
     updateStats();
     showView("path");
     $("#chatBox").innerHTML = "";
