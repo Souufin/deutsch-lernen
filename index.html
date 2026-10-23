@@ -576,6 +576,17 @@
         <div class="v2card" id="v2PlaceResume"></div>
       </section>
 
+      <!-- ======= VIEW: families (Word Families) ======= -->
+      <section class="view" id="view-families" role="tabpanel">
+        <h2 class="sec">عائلات الكلمات — Word Families</h2>
+        <p class="sec-sub">كلمة وحدة تقدر تعلّمك 4 كلمات! الكلمات من نفس العائلة كيتشاركو نفس الجذر، وكتتبنى بزيادة بادئة أو لاحقة. السر ماشي تحفظ أكثر، ولكن تعرف كيفاش تربطهم ببعضياتهم.</p>
+        <div class="v2card"><h3>🔑 البادئات واللواحق اللي كتبني العائلة</h3><p>• <b class="de">un-</b> = النفي (غير) &nbsp;• <b class="de">-bar</b> = يمكن أن… &nbsp;• <b class="de">-ung</b> = نتيجة الفعل (اسم) &nbsp;• <b class="de">ver- / be- / er-</b> = كيبدلو المعنى ديال الفعل الأصلي</p></div>
+        <div id="famGrid"></div>
+        <div class="v2card"><h3>🎯 دورك أنت!</h3><p>من الجذر <b class="de">BENUTZEN</b> (يستعمل)، شحال من كلمة تقدر تخرج؟ اكتب كلمة وحدة في كل مرة واضغط "تحقق".</p>
+        <div class="v2btnrow"><input id="famInput" type="text" placeholder="اكتب كلمة بالألمانية…" style="flex:1;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)"><button class="btn green" id="famCheck">تحقق</button></div>
+        <p id="famFb" style="font-weight:700"></p><p>الكلمات اللي لقيتيها: <b id="famFound">—</b></p></div>
+      </section>
+
     </div>
 
     <!-- ======= bottom nav (mobile) ======= -->
@@ -1711,7 +1722,8 @@
       { id:"exams", label:"الامتحانات", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>' },
       { id:"notebook", label:"دفتري", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V6a2 2 0 012-2h13v13H6a2 2 0 00-2 2zm0 0a2 2 0 002 2h13"/></svg>' },
       { id:"alphabet", label:"الحروف", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V6l6 9V6"/></svg>' },
-      { id:"placement", label:"تحديد المستوى", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>' }
+      { id:"placement", label:"تحديد المستوى", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>' },
+      { id:"families", label:"عائلات الكلمات", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>' }
     ];
     function buildNav(){
       $("#tabsNav").innerHTML = VIEWS.map((v,i)=>`<button class="tab" role="tab" data-view="${v.id}" aria-selected="${i===0}">${v.icon}${v.label}</button>`).join("");
@@ -2884,7 +2896,7 @@
           const date = new Date().toLocaleDateString("ar-MA");
           const w = window.open("", "_blank");
           if (!w) { toast("اسمح بالنوافذ المنبثقة باش تطبع الشهادة"); return; }
-          w.document.write('<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>شهادة إتمام ' + lvl + '</title><style>body{font-family:system-ui,sans-serif;text-align:center;padding:40px;color:#262219} .box{border:4px solid #1F5C38;border-radius:20px;padding:40px} h1{color:#1F5C38} .disc{font-size:13px;color:#666;border-top:1px solid #ccc;margin-top:30px;padding-top:12px}</style></head><body><div class="box"><h1>🎓 شهادة إتمام</h1><p>يشهد تطبيق «أداة تعلم الألمانية» أن</p><h2>' + name.replace(/</g,"&lt;") + '</h2><p>أكمل مستوى <b>' + lvl + '</b> في الامتحانات التجريبية داخل التطبيق، بتاريخ ' + date + '.</p><p class="disc">توضيح: هذه شهادة إتمام محلية من التطبيق نفسه فقط. ليست شهادة رسمية من ANAPEC ولا من Goethe، ولا تعادل أي اعتماد أو دبلوم رسمي.</p></div><script>window.onload=function(){window.print()}<\/script></body></html>');
+          w.document.write('<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>شهادة إتمام ' + lvl + '</title><style>body{font-family:system-ui,sans-serif;text-align:center;padding:40px;color:#262219} .box{border:4px solid #1F5C38;border-radius:20px;padding:40px} h1{color:#1F5C38} .disc{font-size:13px;color:#666;border-top:1px solid #ccc;margin-top:30px;padding-top:12px}</style></head><body><div class="box"><h1>🎓 شهادة إتمام</h1><p>يشهد تطبيق «أداة تعلم الألمانية» أن</p><h2>' + name.replace(/</g,"&lt;") + '</h2><p>أكمل مستوى <b>' + lvl + '</b> في الامتحانات التجريبية داخل التطبيق، بتاريخ ' + date + '.</p><p class="disc">توضيح: هذه شهادة إتمام محلية من التطبيق نفسه فقط. ليست شهادة رسمية من ANAPEC ولا من Goethe، ولا تعادل أي اعتماد أو دبلوم رسمي.</p></div><script>window.onload=function(){window.print()}<\/script>\n\n</body></html>');
           w.document.close();
         }));
       }
@@ -2945,5 +2957,40 @@
       });
     })();
     </script>
-  </body>
+  
+<script>
+(function(){
+  var FAMS=[
+    {root:"SCHREIBEN",ar:"الكتابة",words:[["schreiben","فعل: يكتب","Ich schreibe einen Brief."],["die Schrift","اسم: الكتابة / الخط","Die Schrift ist schön."],["beschreiben","فعل: يصف","Er beschreibt das Haus."],["die Beschreibung","اسم: الوصف","Die Beschreibung ist klar."]]},
+    {root:"BRECHEN",ar:"الكسر",words:[["brechen","فعل: يكسر","Er bricht den Stock."],["brechbar","صفة: قابل للكسر","Das Glas ist brechbar."],["unbrechbar","صفة: غير قابل للكسر","Dieser Stoff ist unbrechbar."],["der Bruch","اسم: الكسر","Der Bruch tut weh."]]},
+    {root:"ARBEITEN",ar:"العمل",words:[["arbeiten","فعل: يعمل","Sie arbeitet in Berlin."],["die Arbeit","اسم: العمل","Die Arbeit ist gut."],["der Arbeiter","اسم: العامل","Der Arbeiter ist stark."],["bearbeiten","فعل: يعالج / يحرر","Er bearbeitet den Text."]]},
+    {root:"SPRECHEN",ar:"الكلام",words:[["sprechen","فعل: يتكلم","Wir sprechen Deutsch."],["die Sprache","اسم: اللغة","Die deutsche Sprache ist schön."],["versprechen","فعل: يعد","Ich verspreche es dir."],["das Gespräch","اسم: المحادثة","Das Gespräch war kurz."]]},
+    {root:"LESEN",ar:"القراءة",words:[["lesen","فعل: يقرأ","Ich lese ein Buch."],["der Leser","اسم: القارئ","Der Leser ist glücklich."],["lesbar","صفة: مقروء","Der Text ist lesbar."],["vorlesen","فعل: يقرأ بصوت عال","Sie liest den Kindern vor."]]}
+  ];
+  function speak(w){ try{ speechSynthesis.cancel(); var u=new SpeechSynthesisUtterance(w); u.lang="de-DE"; speechSynthesis.speak(u);}catch(e){} }
+  var grid=document.getElementById("famGrid");
+  if(grid){
+    grid.innerHTML=FAMS.map(function(f){
+      return '<div class="v2card"><h3>🌳 <span class="de">'+f.root+'</span> — '+f.ar+'</h3>'+
+      f.words.map(function(w){ return '<p><button class="btn ghost" data-speak="'+w[0]+'">🔊</button> <b class="de">'+w[0]+'</b> — '+w[1]+' <br><span class="de">'+w[2]+'</span></p>'; }).join("")+'</div>';
+    }).join("");
+    grid.querySelectorAll("[data-speak]").forEach(function(b){ b.addEventListener("click",function(){ speak(b.getAttribute("data-speak")); }); });
+  }
+  var found=[];
+  var answers={"benutzen":1,"benutzung":1,"die benutzung":1,"benutzer":1,"der benutzer":1,"benutzbar":1,"unbenutzt":1};
+  var btn=document.getElementById("famCheck"), inp=document.getElementById("famInput"), fb=document.getElementById("famFb"), fo=document.getElementById("famFound");
+  function check(){
+    if(!inp) return; var v=inp.value.trim().toLowerCase();
+    if(!v){ fb.textContent="اكتب كلمة أولاً."; return; }
+    if(answers[v] && found.indexOf(v)<0){ found.push(v); fb.textContent="✓ صحيح! برافو — هادي من عائلة BENUTZEN."; }
+    else if(found.indexOf(v)>=0){ fb.textContent="هادي لقيتيها من قبل — جرب وحدة أخرى."; }
+    else { fb.textContent="ماشي من هاد العائلة — جرب: benutzen، der Benutzer، die Benutzung…"; }
+    fo.textContent = found.length ? found.join("، ") : "—";
+    inp.value=""; inp.focus();
+  }
+  if(btn) btn.addEventListener("click", check);
+  if(inp) inp.addEventListener("keydown", function(e){ if(e.key==="Enter") check(); });
+})();
+</script>
+</body>
 </html>
