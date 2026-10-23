@@ -2,8 +2,8 @@
    Same-origin requests: navigations are network-first (so updates propagate),
    other assets cache-first. Cross-origin audio streams (archive.org) are left
    untouched so range requests keep working and nothing huge gets cached. */
-const CACHE = 'deutsch-lernen-v1';
-const SHELL = ['./', './index.html', './manifest.json', './icon.svg'];
+const CACHE = 'deutsch-lernen-v3';
+const SHELL = ['./', './index.html', './manifest.json', './icon.svg', './icon-192.png', './icon-512.png', './icon-512-maskable.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

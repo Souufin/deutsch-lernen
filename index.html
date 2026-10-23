@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" href="data:," />
-    <title>أداة تعلم الألمانية</title>
+    <title>أداة تعلم الألمانية — نسخة جديدة (v2)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -348,6 +348,39 @@
         padding:11px 20px;border-radius:13px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:200;box-shadow:var(--shadow)}
       .toast.show{opacity:1;transform:translateX(50%) translateY(0)}
       @media(min-width:820px){.toast{bottom:30px}}
+      /* ===== v2 additions ===== */
+      .v2card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:var(--shadow)}
+      .v2card h3{margin:0 0 6px}.v2card p{margin:6px 0;color:var(--muted)}
+      .v2grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+      .v2btnrow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+      .v2input,.v2ta{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:inherit}
+      .v2ta{min-height:110px;resize:vertical}
+      .v2fb{border-radius:12px;padding:10px 12px;background:var(--surface2);margin:10px 0}
+      .v2fb.ok{border-inline-start:4px solid var(--ok)} .v2fb.bad{border-inline-start:4px solid var(--danger)}
+      .v2word{text-decoration:underline dotted var(--gold) 2px;text-underline-offset:3px;cursor:pointer;background:none;border:none;color:inherit;font:inherit;padding:0}
+      .v2rw{border-radius:4px;padding:0 1px;transition:background .15s}
+      .v2rw.on{background:#F6D489;color:#262219;box-shadow:0 0 0 2px var(--gold)}
+      .v2pop{position:fixed;inset-inline:12px;bottom:84px;z-index:200;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 18px 40px rgba(0,0,0,.28);display:none;max-width:560px;margin-inline:auto}
+      .v2pop.show{display:block}
+      .v2pop .de{font-size:1.4rem}
+      .v2readbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:12px 16px}
+      .v2readbar small{flex-basis:100%;color:var(--muted)}
+      .v2letter{font-size:3rem;line-height:1}
+      .v2alpha{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+      .v2chat{max-height:340px;overflow:auto;background:var(--surface2);border-radius:14px;padding:12px}
+      .v2msg{margin:8px 0;padding:9px 12px;border-radius:12px;max-width:88%}
+      .v2msg.lena{background:var(--surface);border:1px solid var(--line)}
+      .v2msg.me{background:#DDEBD7;margin-inline-start:auto;text-align:start}
+      .v2pill{display:inline-block;background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.85rem}
+      /* v2 UX: readable, calm, focus-visible, smooth */
+      .de{font-size:1.08rem}
+      button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+      .tabs{overflow-x:auto;scrollbar-width:thin}
+      .bottomnav{overflow-x:auto}
+      .view{transition:opacity .2s ease}
+      .v2card{transition:box-shadow .2s ease}
+      .v2card:hover{box-shadow:0 14px 34px rgba(90,64,20,.14)}
+      @media (prefers-reduced-motion: reduce){ .view{animation:none;transition:none} *{scroll-behavior:auto !important} }
     </style>
   </head>
   <body>
@@ -482,6 +515,58 @@
         <p class="sec-sub">أهم قواعد الألمانية مشروحة بالعربية وبأمثلة مسموعة، مع تمرين سريع في آخر كل موضوع باش تثبت المعلومة.</p>
         <div id="grammarRoot"></div>
       </section>
+      <!-- ======= VIEW: today (v2) ======= -->
+      <section class="view" id="view-today" role="tabpanel">
+        <h2 class="sec">اليوم</h2>
+        <p class="sec-sub">خطوة بخطوة، بلا زحمة. دير غير اللي قدامك اليوم، وكل إجابة صحيحة كتزيدك XP ونجوم.</p>
+        <div class="v2card"><h3>🎯 خطة اليوم</h3><p id="v2TodayPlan"></p><div class="v2btnrow" id="v2TodayBtns"></div></div>
+        <div class="v2card"><h3>🏆 مهام اليوم</h3><div id="v2Quests"></div><p class="sec-sub">المهام كتتحسب من أعمالك في الكتابة والاستماع والمحادثة — ماشي غير من فتح الصفحات.</p></div>
+        <div class="v2card"><h3>📬 المشروع الشهري: رسالة إلى صاحب الدار</h3><p>4 خطوات، خطوة في كل أسبوع. كتب رسالة كاملة في الآخر.</p><div id="v2Project"></div></div>
+        <div class="v2card"><h3>✅ أنا أستطيع…</h3><p>علّم على اللي وليتي قادر تديره فعلاً.</p><div id="v2Ican"></div></div>
+        <div class="v2card"><h3>🔥 سلسلة الأيام</h3><p id="v2Streak"></p><button class="btn ghost" onclick="showView('alphabet')">الحروف الألمانية ←</button></div>
+      </section>
+
+      <!-- ======= VIEW: writing (v2) ======= -->
+      <section class="view" id="view-writing" role="tabpanel">
+        <h2 class="sec">الكتابة والتصحيح</h2>
+        <p class="sec-sub">اكتب أنت بنفسك، والتطبيق يصحح لك بالقواعد. اختار حاجة وحدة وكمّلها.</p>
+        <div class="v2btnrow" id="v2WriteMenu"></div>
+        <div id="v2WritePanel"></div>
+      </section>
+
+      <!-- ======= VIEW: speaking (v2) ======= -->
+      <section class="view" id="view-speaking" role="tabpanel">
+        <h2 class="sec">التحدث والاستماع</h2>
+        <p class="sec-sub">اسمع أولاً، ومن بعد هضر بصوت عالي. اختار نشاط واحد فقط.</p>
+        <div class="v2btnrow" id="v2SpeakMenu"></div>
+        <div id="v2SpeakPanel"></div>
+      </section>
+
+      <!-- ======= VIEW: exams (v2) ======= -->
+      <section class="view" id="view-exams" role="tabpanel">
+        <h2 class="sec">الامتحانات التجريبية</h2>
+        <p class="sec-sub">بحال امتحان Goethe: كتابة ومحادثة. سالي A1 باش يتفتح لك A2.</p>
+        <div class="v2btnrow" id="v2ExamMenu"></div>
+        <div id="v2ExamPanel"></div>
+      </section>
+
+      <!-- ======= VIEW: notebook (v2) ======= -->
+      <section class="view" id="view-notebook" role="tabpanel">
+        <h2 class="sec">دفتري</h2>
+        <p class="sec-sub">الكلمات اللي ضغطتي عليها في القصص والمقالات، وأخطاؤك اللي خاصك تراجعها.</p>
+        <div class="v2card"><h3>📒 كلماتي</h3><div id="v2NotebookList"></div></div>
+        <div class="v2card"><h3>⚠️ أخطائي</h3><div id="v2MistakesList"></div><button class="btn ghost" id="v2ClearMistakes">مسح الأخطاء اللي تعلمتها</button></div>
+      </section>
+
+      <!-- ======= VIEW: alphabet (v2) ======= -->
+      <section class="view" id="view-alphabet" role="tabpanel">
+        <h2 class="sec">الحروف الألمانية</h2>
+        <p class="sec-sub">26 حرف + Ä و Ö و Ü و ß. اسمع كل حرف، وشوف كيفاش كيتنطق بالدارجة، وبمثال بكلمة تبدا بيه. النطق من متصفحك (TTS ألماني)، بلا إنترنت إضافي.</p>
+        <div class="v2btnrow"><button class="btn green" id="v2AlphaAll">🔊 اسمع الأبجدية كاملة</button><button class="btn ghost" id="v2AlphaStop">⏹ إيقاف</button></div>
+        <div class="v2alpha" id="v2AlphaGrid"></div>
+        <div class="v2card"><h3>💡 قواعد سريعة</h3><p>• <b class="de">ß</b> كيتنطق بحال <b class="de">ss</b>، وكيجي غير من بعد صوت طويل، وعمره ما كيبدا كلمة. مثال: <span class="de">Straße</span> (الشارع).<br>• <b class="de">U</b> عادية، و <b class="de">Ü</b> كتدير شفايفك مدورة بحال بغيتي تقول U، ولكن لسانك بحال I.<br>• <b class="de">Ö</b> بحال O ولكن شفايف مدورة ولسان قدام.<br>• <b class="de">Ä</b> قريبة من E المفتوحة، بحال “آي” خفيفة.<br>• <b class="de">CH</b> من بعد A/O/U كتكون خشنة، ومن بعد E/I كتكون رطبة وخفيفة.<br>• <b class="de">SCH</b> = “ش”، و <b class="de">SP/ST</b> في أول الكلمة = “شب/شت”.</p></div>
+      </section>
+
     </div>
 
     <!-- ======= bottom nav (mobile) ======= -->
@@ -1610,7 +1695,13 @@
       { id:"coach", label:"المدرّب الذكي", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-8 8H4l2-3a8 8 0 1115-5z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01" stroke-width="3" stroke-linecap="round"/></svg>' },
       { id:"stories", label:"القصص", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5a2 2 0 012-2h14v16H6a2 2 0 00-2 2z"/><path d="M4 19a2 2 0 012-2h14"/><path d="M9 7h7M9 11h5"/></svg>' },
       { id:"articles", label:"المقالات", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13v16H4z"/><path d="M17 8h1a2 2 0 012 2v8a2 2 0 01-2 2"/><path d="M7 8h7M7 12h7M7 16h4"/></svg>' },
-      { id:"grammar", label:"القواعد", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>' }
+      { id:"grammar", label:"القواعد", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>' },
+      { id:"today", label:"اليوم", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>' },
+      { id:"writing", label:"الكتابة", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>' },
+      { id:"speaking", label:"التحدث", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a3.5 3.5 0 003.5-3.5v-5a3.5 3.5 0 10-7 0v5A3.5 3.5 0 0012 15z"/><path d="M5 11.5a7 7 0 0014 0M12 19v3"/></svg>' },
+      { id:"exams", label:"الامتحانات", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h11l3 3v13H5z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>' },
+      { id:"notebook", label:"دفتري", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V6a2 2 0 012-2h13v13H6a2 2 0 00-2 2zm0 0a2 2 0 002 2h13"/></svg>' },
+      { id:"alphabet", label:"الحروف", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V6l6 9V6"/></svg>' }
     ];
     function buildNav(){
       $("#tabsNav").innerHTML = VIEWS.map((v,i)=>`<button class="tab" role="tab" data-view="${v.id}" aria-selected="${i===0}">${v.icon}${v.label}</button>`).join("");
@@ -2333,6 +2424,385 @@
       $("#artToggleTr").textContent = on ? "إخفاء الترجمة" : "إظهار الترجمة العربية";
     });
 
+    /* ==================== v2: storage, dictionary, click-word ==================== */
+    const V2KEY = "deutschV2";
+    let v2 = { notebook:[], mistakes:[], ican:[], replies:[], quests:{write:0,correct:0,inrow:0,minutes:0}, project:[false,false,false,false], streak:0, lastDay:"" };
+    try { const s = JSON.parse(localStorage.getItem(V2KEY) || "null"); if (s) v2 = Object.assign(v2, s); } catch(e) {}
+    function saveV2(){ try { localStorage.setItem(V2KEY, JSON.stringify(v2)); } catch(e) {} }
+    function v2Today(){ const d = new Date(); if (v2.lastDay !== d.toDateString()) { v2.lastDay = d.toDateString(); v2.streak = (v2.streak||0) + 1; v2.quests = {write:0,correct:0,inrow:0,minutes:0}; saveV2(); } }
+    function v2Cheer(){ const m = ["ممتاز! كتقدم مزيان 👏","برافو! هادي هي الطريق الصحيحة ⭐","أحسنت! كلمة بكلمة غادي توصل 🎯","واصل! كل خطوة صغيرة كتحسب 💪"]; return m[Math.floor(Math.random()*m.length)]; }
+    function v2AddMistake(rule, ex){ if (!v2.mistakes.find(x=>x.rule===rule)) { v2.mistakes.push({rule:rule, ex:ex}); saveV2(); } }
+    const V2DICT = {
+      "bäcker":["خبّاز","baker","Ein Geschäft für Brot und Kuchen."],"verkäufer":["بائع","seller","Ein Mann, der etwas verkauft."],"brötchen":["خبزة صغيرة","bread roll","Ein kleines Brot zum Frühstück."],"bezahlt":["خلّص / دفع","paid","Er hat das Geld gegeben."],
+      "haus":["دار / منزل","house","Ein Ort, wo man wohnt."],"frau":["امرأة","woman","Eine erwachsene Frau."],"mann":["رجل","man","Ein erwachsener Mann."],"kind":["طفل","child","Ein junges Kind."],"freund":["صديق","friend","Ein guter Freund."],"freundin":["صديقة","friend (female)","Eine gute Freundin."],
+      "wasser":["ماء","water","Man trinkt Wasser."],"brot":["خبز","bread","Brot isst man zum Frühstück."],"kaffee":["قهوة","coffee","Ein warmes Getränk am Morgen."],"milch":["حليب","milk","Milch ist weiß."],"schule":["مدرسة","school","Kinder lernen in der Schule."],"lehrer":["أستاذ","teacher","Ein Lehrer hilft den Schülern."],"arbeit":["شغل / عمل","work","Arbeit ist ein Job."],"stadt":["مدينة","city","Eine große Stadt."],"straße":["شارع","street","Autos fahren auf der Straße."],"bahnhof":["محطة القطار","train station","Züge fahren vom Bahnhof ab."],"arzt":["طبيب","doctor","Ein Arzt hilft kranken Menschen."],"geld":["فلوس","money","Mit Geld kann man kaufen."],
+      "morgen":["صباح","morning","Am Morgen steht man auf."],"heute":["اليوم","today","Heute ist ein guter Tag."],"gestern":["البارح","yesterday","Gestern war Sonntag."],"woche":["أسبوع","week","Eine Woche hat sieben Tage."],"zeit":["وقت","time","Zeit ist wichtig."],"liebe":["حب","love","Liebe ist ein schönes Gefühl."],"glück":["سعادة / حظ","happiness / luck","Glück macht froh."],"essen":["ياكل / أكل","to eat / food","Wir essen am Mittag."],"trinken":["يشرب","to drink","Wir trinken Wasser."],"gehen":["يمشي","to go","Wir gehen zur Schule."],"kommen":["يجي","to come","Er kommt heute."],"wohnen":["يسكن","to live","Ich wohne in Mohammedia."],"lernen":["يتعلم","to learn","Ich lerne Deutsch."],"sprechen":["يهضر / يتكلم","to speak","Ich spreche Deutsch."],"schreiben":["يكتب","to write","Ich schreibe einen Brief."],"lesen":["يقرا","to read","Ich lese ein Buch."],"hören":["يسمع","to listen","Ich höre Musik."],
+      "groß":["كبير","big","Ein großes Haus."],"klein":["صغير","small","Ein kleines Kind."],"gut":["مزيان","good","Das ist gut."],"schön":["زوين","beautiful","Ein schöner Tag."],"neu":["جديد","new","Ein neues Buch."],"alt":["قديم","old","Ein altes Haus."],"schnell":["بسرعة","fast","Er läuft schnell."],"langsam":["بشوية","slow","Bitte langsam sprechen."],
+      "vater":["أب","father","Mein Vater arbeitet."],"mutter":["أم","mother","Meine Mutter kocht gut."],"bruder":["أخ","brother","Mein Bruder spielt Fußball."],"schwester":["أخت","sister","Meine Schwester liest gern."],"familie":["عائلة","family","Meine Familie ist groß."],
+      "tisch":["طاولة","table","Der Tisch steht im Zimmer."],"stuhl":["كرسي","chair","Ich sitze auf dem Stuhl."],"buch":["كتاب","book","Ich lese ein Buch."],"auto":["سيارة","car","Das Auto fährt schnell."],"zug":["قطار","train","Der Zug fährt nach Berlin."],"flugzeug":["طائرة","airplane","Das Flugzeug fliegt hoch."],"hund":["كلب","dog","Der Hund ist freundlich."],"katze":["قطة","cat","Die Katze schläft gern."]
+    };
+    function v2Norm(w){ return String(w||"").toLowerCase().replace(/^[„“\"'\(\[]+|[.,!?;:\u201e\u201c\"'\)\]]+$/g,""); }
+    function v2SpeakDe(text, rate){
+      try {
+        if (!("speechSynthesis" in window)) { toast("المتصفح ديالك ما كيدعمش النطق الصوتي"); return; }
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text); u.lang = "de-DE"; u.rate = rate || 1;
+        const vs = window.speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith("de")); if (vs.length) u.voice = vs[0];
+        window.speechSynthesis.speak(u);
+      } catch(e) {}
+    }
+    /* word popup */
+    let v2PopEl = null;
+    function v2ShowWord(raw){
+      const key = v2Norm(raw); const d = V2DICT[key]; if (!d) return;
+      if (!v2PopEl) { v2PopEl = document.createElement("div"); v2PopEl.className = "v2pop"; v2PopEl.id = "v2Pop"; document.body.appendChild(v2PopEl); }
+      v2PopEl.innerHTML = '<button class="p-close" style="float:left" onclick="document.getElementById(\'v2Pop\').classList.remove(\'show\')">✕</button>'
+        + '<div class="de" dir="ltr">' + esc(raw) + '</div><p><b>بالعربية:</b> ' + esc(d[0]) + ' · <b>English:</b> ' + esc(d[1]) + '</p>'
+        + '<p class="de" dir="ltr" style="font-weight:400">' + esc(d[2]) + '</p>'
+        + '<div class="v2btnrow"><button class="btn green" id="v2PopSpeak">🔊 اسمعها</button><button class="btn ghost" id="v2PopAdd">➕ أضف للدفتر</button></div>';
+      v2PopEl.classList.add("show");
+      document.getElementById("v2PopSpeak").onclick = ()=> v2SpeakDe(raw, 1);
+      document.getElementById("v2PopAdd").onclick = ()=>{
+        if (!v2.notebook.find(x=>v2Norm(x.de)===key)) { v2.notebook.push({de:raw, ar:d[0], en:d[1]}); saveV2(); renderNotebook(); }
+        toast("تخزنت في دفترك 📒"); v2PopEl.classList.remove("show");
+      };
+    }
+    function v2TokenizeReader(bodyEl){
+      if (!bodyEl) return;
+      bodyEl.querySelectorAll(".sp-de").forEach(p=>{
+        const walk = (node)=>{
+          Array.from(node.childNodes).forEach(ch=>{
+            if (ch.nodeType === 3) {
+              const frag = document.createDocumentFragment();
+              String(ch.textContent).split(/(\s+)/).forEach(part=>{
+                if (/^\s+$/.test(part) || part === "") { frag.appendChild(document.createTextNode(part)); return; }
+                const m = part.match(/^([^A-Za-zÄÖÜäöüß]*)([A-Za-zÄÖÜäöüß]+)([^A-Za-zÄÖÜäöüß]*)$/);
+                if (!m) { frag.appendChild(document.createTextNode(part)); return; }
+                if (m[1]) frag.appendChild(document.createTextNode(m[1]));
+                const sp = document.createElement("span"); sp.className = "v2rw"; sp.textContent = m[2];
+                const key = v2Norm(m[2]); if (V2DICT[key]) { sp.classList.add("v2word"); sp.dataset.w = m[2]; sp.title = "اضغط باش تشوف المعنى"; }
+                frag.appendChild(sp);
+                if (m[3]) frag.appendChild(document.createTextNode(m[3]));
+              });
+              node.replaceChild(frag, ch);
+            } else if (ch.nodeType === 1 && ch.tagName !== "BR") { walk(ch); }
+          });
+        };
+        walk(p);
+      });
+    }
+    function v2WireClickWords(){
+      ["#srBody","#artBody"].forEach(sel=>{
+        const el = $(sel); if (!el || el.dataset.v2wired) return; el.dataset.v2wired = "1";
+        el.addEventListener("click", e=>{
+          const w = e.target.closest && e.target.closest(".v2word"); if (w) v2ShowWord(w.dataset.w);
+        });
+      });
+    }
+    /* ==================== v2: read-along (TTS + boundary highlighting) ==================== */
+    let v2Read = { active:false, paras:[], pi:0, rate:1, timer:null, body:null, audio:null };
+    function v2StopRead(){
+      v2Read.active = false; try { window.speechSynthesis.cancel(); } catch(e) {}
+      if (v2Read.timer) clearInterval(v2Read.timer); v2Read.timer = null;
+      if (v2Read.body) v2Read.body.querySelectorAll(".v2rw.on").forEach(s=>s.classList.remove("on"));
+      document.querySelectorAll("#v2ReadPlay, [id=\"v2ReadPlay\"]").forEach(b=>{ b.textContent = "▶ اقرأ معي (TTS)"; });
+    }
+    function v2ReadPara(){
+      if (!v2Read.active) return;
+      const p = v2Read.paras[v2Read.pi]; if (!p) { v2StopRead(); toast("ساليتي القراءة 👏 +20 XP"); try { addXp(20); updateStats(); } catch(e) {} return; }
+      const spans = Array.from(p.querySelectorAll(".v2rw"));
+      const text = p.textContent;
+      /* char offsets of each span word inside the paragraph text */
+      let offsets = [], pos = 0;
+      /* rebuild offsets by scanning text for span words in order */
+      spans.forEach(sp=>{ const idx = text.indexOf(sp.textContent, pos); offsets.push(idx < 0 ? pos : idx); pos = (idx < 0 ? pos : idx) + sp.textContent.length; });
+      let last = -1, gotBoundary = false;
+      const hi = (i)=>{ if (i === last) return; last = i; spans.forEach((s,k)=>s.classList.toggle("on", k===i)); if (spans[i]) spans[i].scrollIntoView({block:"nearest"}); };
+      try {
+        const u = new SpeechSynthesisUtterance(text); u.lang = "de-DE"; u.rate = v2Read.rate;
+        const vs = window.speechSynthesis.getVoices().filter(v=>v.lang && v.lang.toLowerCase().startsWith("de")); if (vs.length) u.voice = vs[0];
+        u.onboundary = (ev)=>{ if (typeof ev.charIndex !== "number") return; gotBoundary = true;
+          let best = 0; offsets.forEach((o,k)=>{ if (o <= ev.charIndex) best = k; }); hi(best); };
+        u.onend = ()=>{ if (!v2Read.active) return; v2Read.pi++; v2ReadPara(); };
+        u.onerror = ()=>{ if (v2Read.active) { v2Read.pi++; v2ReadPara(); } };
+        window.speechSynthesis.speak(u);
+        setTimeout(()=>{ if (v2Read.active && !gotBoundary && !v2Read.timer) {
+          let k = 0; hi(0);
+          v2Read.timer = setInterval(()=>{ k++; if (k >= spans.length) { clearInterval(v2Read.timer); v2Read.timer = null; } else hi(k); }, Math.max(450, 800 / v2Read.rate));
+        }}, 1500);
+      } catch(e) { v2Read.pi++; v2ReadPara(); }
+    }
+    function v2StartRead(bodySel, audioSel){
+      const body = $(bodySel); if (!body) return;
+      v2StopRead();
+      const au = $(audioSel); if (au) { try { au.pause(); } catch(e) {} }
+      v2TokenizeReader(body);
+      const _reader = body.closest ? body.closest(".sreader") : null; const _rateSel = _reader ? _reader.querySelector(".v2readbar select") : null; v2Read = { active:true, paras:Array.from(body.querySelectorAll(".sp-de")), pi:0, rate:parseFloat(_rateSel ? _rateSel.value : 1) || 1, timer:null, body:body, audio:au };
+      if (!v2Read.paras.length) { toast("افتح قصة أو مقال أولاً"); v2Read.active = false; return; }
+      if (_reader) { const _pb = _reader.querySelector(".v2readbar button"); if (_pb) _pb.textContent = "⏸ إيقاف القراءة"; }
+      v2ReadPara();
+    }
+    function v2InjectReadBar(readerSel, bodySel, audioSel){
+      const r = document.querySelector(readerSel); if (!r || r.querySelector(".v2readbar")) return;
+      const bar = document.createElement("div"); bar.className = "v2readbar";
+      bar.innerHTML = '<button class="btn green" id="v2ReadPlay">▶ اقرأ معي (TTS)</button><label>السرعة <select id="v2ReadRate" class="v2input" style="width:auto;display:inline-block;padding:6px 10px"><option value="0.7">0.7× بطيئة</option><option value="1" selected>1× عادية</option><option value="1.25">1.25×</option></select></label><button class="btn ghost" id="v2ReadStop">⏹ إيقاف</button><small>⚠️ التظليل كلمة بكلمة يخدم مع القراءة الصوتية (TTS) فقط، ماشي مع التسجيل البشري — حيث التسجيل ما فيهش توقيت كل كلمة. اضغط على أي كلمة مسطرة باش تشوف معناها.</small>';
+      const bodyWrap = r.querySelector(".sr-body"); if (bodyWrap) bodyWrap.parentNode.insertBefore(bar, bodyWrap);
+      /* duplicate ids across two readers: use event delegation on this bar only */
+      bar.querySelector("#v2ReadPlay").addEventListener("click", ()=>{ if (v2Read.active) v2StopRead(); else v2StartRead(bodySel, audioSel); });
+      bar.querySelector("#v2ReadStop").addEventListener("click", v2StopRead);
+      bar.querySelector("#v2ReadRate").addEventListener("change", e=>{ v2Read.rate = parseFloat(e.target.value) || 1; });
+    }
+    function v2PatchReaders(){
+      try {
+        const _os = openStory; openStory = function(id){ _os(id); v2TokenizeReader($("#srBody")); };
+        const _oa = openArticle; openArticle = function(id){ _oa(id); v2TokenizeReader($("#artBody")); };
+      } catch(e) {}
+      v2InjectReadBar("#storyReader", "#srBody", "#storyAudio");
+      v2InjectReadBar("#articleReader", "#artBody", "#articleAudio");
+      ["#srClose","#artClose"].forEach(s=>{ const b = $(s); if (b) b.addEventListener("click", v2StopRead); });
+      v2WireClickWords();
+    }
+
+    /* ==================== v2: writing checks ==================== */
+    const V2NOUNS = ["haus","schule","freund","freundin","lehrer","arbeit","stadt","straße","bahnhof","arzt","geld","wasser","brot","kaffee","milch","kind","frau","mann","vater","mutter","bruder","schwester","familie","tisch","stuhl","buch","auto","zug","hund","katze","morgen","woche","zeit"];
+    function checkGerman(text){
+      const fb = []; let score = 100; const t = String(text||"").trim();
+      if (!t) return {score:0, fb:["اكتب شي حاجة أولاً."]};
+      if (t[0] !== t[0].toUpperCase()) { fb.push("⚠️ الجملة الألمانية خاصها تبدا بحرف كبير."); score -= 15; }
+      if (!/[.!?]$/.test(t)) { fb.push("⚠️ زيد نقطة أو علامة استفهام في الآخر."); score -= 10; }
+      if (/\bich\b/.test(t)) { fb.push("⚠️ Ich كتكتب ديما بحرف كبير."); score -= 10; v2AddMistake("Ich بحرف كبير", t.slice(0,60)); }
+      if (/\s{2,}/.test(t)) { fb.push("⚠️ كاين فراغات زايدة."); score -= 5; }
+      const words = t.split(/\s+/);
+      words.slice(1).forEach(w=>{ const k = v2Norm(w); if (V2NOUNS.includes(k) && w[0] === w[0].toLowerCase()) { fb.push("⚠️ الأسماء في الألمانية كتبدا بحرف كبير: " + w + " ← " + w[0].toUpperCase() + w.slice(1)); score -= 15; v2AddMistake("الأسماء بحرف كبير", w); } });
+      if (words.length < 3) { fb.push("⚠️ الجملة قصيرة بزاف — زيد كلمة أو فكرة."); score -= 10; }
+      if (score >= 85) fb.push("✅ ممتاز! الجملة سليمة من ناحية القواعد الأساسية.");
+      else if (score >= 60) fb.push("👍 جيد، صحح الملاحظات اللي فوق وعاود.");
+      else fb.push("💪 ما شي مشكل — صحح نقطة بنقطة وعاود المحاولة.");
+      return {score:Math.max(0,score), fb:fb};
+    }
+    function v2ShowCheck(elId, text){
+      const r = checkGerman(text); const el = $(elId); if (!el) return r;
+      el.innerHTML = "<b>النتيجة: " + r.score + "/100</b><br>" + r.fb.map(x=>esc(x)).join("<br>");
+      el.className = "v2fb " + (r.score >= 85 ? "ok" : "bad");
+      if (r.score >= 85) { v2.quests.correct++; v2.quests.inrow++; toast(v2Cheer() + " +20 XP"); try { addXp(20); updateStats(); } catch(e) {} }
+      else { v2.quests.inrow = 0; }
+      saveV2(); renderToday(); return r;
+    }
+    const V2IMPROVE = [
+      {de:"Ich gehe in die Schule. Ich lerne Deutsch.", hint:"اربط الجملتين بـ und", need:["und","schule","deutsch"]},
+      {de:"Mein Bruder ist klein. Er spielt gern Fußball.", hint:"اربط الجملتين بـ und", need:["und","bruder"]},
+      {de:"Ich trinke Kaffee. Ich esse Brot.", hint:"اجمع الجملتين في جملة وحدة بـ und", need:["und","kaffee","brot"]},
+      {de:"Das Wetter ist schön. Wir gehen in den Park.", hint:"استعمل weil (حيث) باش تربط السبب", need:["weil"]}
+    ];
+    let v2ImpIdx = 0;
+    const V2LETTERS = [
+      {type:"📧 بريد إلكتروني", from:"مدرسة اللغة Lingua", de:"Guten Tag! Ihr Deutschkurs beginnt am Montag um 9 Uhr. Bitte bringen Sie ein Buch und einen Stift mit. Der Kurs ist im Raum 3. Viele Grüße, Frau Weber.", ar:"بريد من مدرسة اللغة: الدورة كتبدا نهار الاثنين مع 9، جيب كتاب وقلم، القاعة 3.", q:"فين كاين الدرس؟", opts:["في القاعة 3","في البيت","في المقهى"], ans:0},
+      {type:"📱 رسالة SMS", from:"عيادة الطبيب", de:"Hallo! Ihr Termin ist am Dienstag um 10 Uhr. Bitte kommen Sie 10 Minuten früher. Danke!", ar:"رسالة من العيادة: الموعد نهار الثلاثاء مع 10، جي 10 دقايق قبل.", q:"إمتى الموعد؟", opts:["الثلاثاء مع 10","الاثنين مع 9","الأربعاء مع 11"], ans:0},
+      {type:"📋 إعلان", from:"إدارة العمارة", de:"Wichtige Information: Bitte trennen Sie den Müll. Papier kommt in die blaue Tonne. Glas kommt in die grüne Tonne. Danke für Ihre Hilfe!", ar:"إعلان: فرّق الزبل — الورق في الحاوية الزرقاء، والزجاج في الخضراء.", q:"فين كيتحط الورق؟", opts:["في الحاوية الزرقاء","في الحاوية الخضراء","في الشارع"], ans:0},
+      {type:"✉️ رسالة إلى صاحب الدار", from:"صاحب الدار", de:"Sehr geehrte Mieter, die Miete ist am ersten Tag des Monats fällig. Bitte überweisen Sie pünktlich. Bei Fragen schreiben Sie mir gern. Mit freundlichen Grüßen, Herr Schmidt.", ar:"رسالة من صاحب الدار: الكراء كيتخلص في أول الشهر، خلّص في الوقت.", q:"إمتى كيتخلص الكراء؟", opts:["في أول الشهر","في آخر الشهر","كل أسبوع"], ans:0}
+    ];
+    function renderWriting(){
+      $("#v2WriteMenu").innerHTML = '<button class="btn green" data-w="improve">✏️ حسّن جملة</button><button class="btn ghost" data-w="free">📝 اكتب وتصحح</button><button class="btn ghost" data-w="letters">✉️ رسائل ووثائق</button>';
+      $$("#v2WriteMenu [data-w]").forEach(b=>b.addEventListener("click", ()=>showWriting(b.dataset.w)));
+      showWriting("improve");
+    }
+    function showWriting(kind){
+      const p = $("#v2WritePanel"); if (!p) return;
+      if (kind === "improve") {
+        const it = V2IMPROVE[v2ImpIdx % V2IMPROVE.length];
+        p.innerHTML = '<div class="v2card"><h3>✏️ حسّن هاد الجملة</h3><p class="de" dir="ltr" style="font-size:1.2rem">' + esc(it.de) + '</p><p>💡 التلميح: ' + esc(it.hint) + '</p><textarea class="v2ta" id="v2ImpIn" placeholder="اكتب الجملة المحسّنة هنا بالألمانية…"></textarea><div class="v2btnrow"><button class="btn green" id="v2ImpCheck">تحقق</button><button class="btn ghost" id="v2ImpNext">جملة أخرى ←</button></div><div id="v2ImpFb"></div></div>';
+        $("#v2ImpCheck").onclick = ()=>{ const v = $("#v2ImpIn").value; v2.quests.write++; saveV2(); const low = v.toLowerCase(); const ok = it.need.every(k=>low.includes(k)); const r = v2ShowCheck("#v2ImpFb", v); if (ok && r.score >= 60) { $("#v2ImpFb").innerHTML += "<br>✅ " + v2Cheer(); } else if (!ok) { $("#v2ImpFb").innerHTML += "<br>💡 ما زال خاصك: " + esc(it.need.join(", ")); } renderToday(); };
+        $("#v2ImpNext").onclick = ()=>{ v2ImpIdx++; showWriting("improve"); };
+      } else if (kind === "free") {
+        p.innerHTML = '<div class="v2card"><h3>📝 اكتب نصك بالألمانية</h3><p>اكتب 3 جمل على الأقل: عرّف بنفسك، فين ساكن، وشنو كتحب تدير.</p><textarea class="v2ta" id="v2FreeIn" placeholder="Ich heiße … Ich wohne in … Ich lerne Deutsch, weil …"></textarea><div class="v2btnrow"><button class="btn green" id="v2FreeCheck">صحح لي النص</button><button class="btn ghost" id="v2FreeSpeak">🔊 اسمع النص</button></div><div id="v2FreeFb"></div></div>';
+        $("#v2FreeCheck").onclick = ()=>{ v2.quests.write++; saveV2(); v2ShowCheck("#v2FreeFb", $("#v2FreeIn").value); renderToday(); };
+        $("#v2FreeSpeak").onclick = ()=> v2SpeakDe($("#v2FreeIn").value || "Ich lerne Deutsch.", 1);
+      } else {
+        p.innerHTML = '<div class="v2card"><h3>✉️ اقرا، افهم، ومن بعد اكتب الرد</h3></div>' + V2LETTERS.map((L,i)=>'<div class="v2card"><span class="v2pill">' + esc(L.type) + '</span> · <b>' + esc(L.from) + '</b><p class="de" dir="ltr" style="font-size:1.1rem">' + esc(L.de) + '</p><p>' + esc(L.ar) + '</p><p><b>' + esc(L.q) + '</b></p><div class="v2btnrow">' + L.opts.map((o,oi)=>'<button class="btn ghost" data-lo="' + i + ':' + oi + '">' + esc(o) + '</button>').join("") + '</div><div class="v2fb" data-lfb="' + i + '"></div><textarea class="v2ta" id="v2Reply' + i + '" placeholder="اكتب ردك بالألمانية هنا…"></textarea><button class="btn green" data-lsend="' + i + '">أرسل الرد ✓</button><div id="v2ReplyFb' + i + '"></div></div>').join("");
+        $$("[data-lo]").forEach(b=>b.addEventListener("click", ()=>{ const [i,oi] = b.dataset.lo.split(":").map(Number); const L = V2LETTERS[i]; const fb = document.querySelector('[data-lfb="' + i + '"]'); if (oi === L.ans) { fb.textContent = "✅ صحيح! " + v2Cheer(); try { addXp(15); updateStats(); } catch(e) {} } else { fb.textContent = "❌ ما شي هادي — عاود اقرا الرسالة بشوية."; } }));
+        $$("[data-lsend]").forEach(b=>b.addEventListener("click", ()=>{ const i = Number(b.dataset.lsend); const v = $("#v2Reply" + i).value; v2.quests.write++; saveV2(); v2.replies.push({letter:i, text:v}); saveV2(); v2ShowCheck("#v2ReplyFb" + i, v); renderToday(); }));
+      }
+    }
+    /* ==================== v2: speaking ==================== */
+    const V2TOPICS = {
+      me:{label:"عن نفسي", greet:"Hallo! Ich heiße Lena. Wie heißt du?", qs:["Wie alt bist du?","Wo wohnst du?","Was machst du gern?"]},
+      daily:{label:"الحياة اليومية", greet:"Hallo! Erzähl mir von deinem Tag. Was machst du am Morgen?", qs:["Was isst du zum Frühstück?","Wann gehst du zur Arbeit?","Was machst du am Abend?"]},
+      work:{label:"الشغل والدراسة", greet:"Hallo! Arbeitest du oder studierst du?", qs:["Was ist dein Beruf?","Lernst du Deutsch für die Arbeit?","Was gefällt dir an deinem Job?"]},
+      travel:{label:"السفر", greet:"Hallo! Reist du gern? Wohin möchtest du reisen?", qs:["Warst du schon in Deutschland?","Was möchtest du in Berlin sehen?","Reist du lieber mit dem Zug oder mit dem Auto?"]},
+      opinion:{label:"إبداء الرأي", greet:"Hallo! Was ist deine Meinung? Findest du Deutsch schwer?", qs:["Warum lernst du Deutsch?","Was ist schwieriger: Grammatik oder Sprechen?","Was ist dein Lieblingsfilm?"]},
+      grammar:{label:"القواعد", greet:"Hallo! Frag mich etwas zur Grammatik. Zum Beispiel: Wann benutzt man der, die oder das?", qs:["Was ist der Unterschied zwischen U und Ü?","Wann benutzt man Perfekt?","Was bedeutet das Wort weil?"]}
+    };
+    let v2LenaTopic = "me", v2LenaQ = 0, v2LenaLast = "", v2LenaSlow = false;
+    function v2LenaSay(text){
+      v2LenaLast = text; const box = $("#v2LenaChat"); if (box) { box.innerHTML += '<div class="v2msg lena"><b>🧑‍🏫 Lena:</b> <span class="de" dir="ltr">' + esc(text) + '</span></div>'; box.scrollTop = box.scrollHeight; }
+      v2SpeakDe(text, v2LenaSlow ? 0.7 : 1);
+    }
+    function v2LenaReply(input){
+      const s = String(input||"").toLowerCase();
+      let r = "";
+      if (/hallo|guten|hi\b/.test(s)) r = "Hallo! Schön, dass du da bist. Wie geht es dir?";
+      else if (/heiße|ich bin|name/.test(s)) r = "Freut mich! Ich heiße Lena. Wo wohnst du?";
+      else if (/wohne|mohammedia|casablanca|marokko|maghreb/.test(s)) r = "Schön! Marokko ist ein schönes Land. Sprichst du auch Französisch?";
+      else if (/alt|jahre/.test(s)) r = "Interessant! Und was machst du gern in deiner Freizeit?";
+      else if (/fußball|sport|film|musik/.test(s)) r = "Das klingt gut! Erzähl mir mehr darüber.";
+      else if (/danke/.test(s)) r = "Gern geschehen! Du lernst sehr gut.";
+      else { const t = V2TOPICS[v2LenaTopic]; r = t.qs[v2LenaQ % t.qs.length]; v2LenaQ++; }
+      v2LenaSay(r);
+    }
+    function v2LenaUser(text){
+      const box = $("#v2LenaChat"); if (box) { box.innerHTML += '<div class="v2msg me"><b>أنت:</b> ' + esc(text) + '</div>'; box.scrollTop = box.scrollHeight; }
+      v2.quests.write++; saveV2(); setTimeout(()=>v2LenaReply(text), 600);
+    }
+    const V2ROLE = [
+      {name:"☕ في المقهى", missions:[{task:"اطلب قهوة", de:"Ich möchte einen Kaffee, bitte.", need:["kaffee"]},{task:"اطلب شي حاجة تاكلها", de:"Ich möchte ein Brötchen, bitte.", need:["brötchen"]},{task:"سول على الثمن", de:"Wie viel kostet das?", need:["viel","kostet"]},{task:"خلّص وسلّم", de:"Ich bezahle jetzt. Danke und tschüss!", need:["bezahle","danke"]}]},
+      {name:"🩺 عند الطبيب", missions:[{task:"قول فين كيضرك", de:"Mein Kopf tut weh.", need:["kopf","weh"]},{task:"قول من إمتى", de:"Seit gestern tut es weh.", need:["gestern"]},{task:"سول على الدواء", de:"Brauche ich Medizin?", need:["medizin"]},{task:"شكر الطبيب", de:"Vielen Dank, Herr Doktor!", need:["danke"]}]},
+      {name:"🚉 في المحطة", missions:[{task:"سول على القطار لبرلين", de:"Wann fährt der Zug nach Berlin?", need:["zug","berlin"]},{task:"اشري تذكرة", de:"Ich möchte eine Fahrkarte, bitte.", need:["fahrkarte"]},{task:"سول على الرصيف", de:"Von welchem Gleis fährt der Zug ab?", need:["gleis"]}]},
+      {name:"🛒 في السوق", missions:[{task:"سول على الخبز", de:"Wo ist das Brot?", need:["brot"]},{task:"اطلب كيلو تفاح", de:"Ich möchte ein Kilo Äpfel, bitte.", need:["äpfel","kilo"]},{task:"سول على الثمن", de:"Wie viel kostet das Kilo?", need:["viel","kostet"]},{task:"خلّص", de:"Ich bezahle mit Karte.", need:["bezahle"]}]},
+      {name:"🏠 عند صاحب الدار", missions:[{task:"عرّف بنفسك", de:"Guten Tag, ich heiße Soufiane.", need:["heiße"]},{task:"سول على الكراء", de:"Wie hoch ist die Miete?", need:["miete"]},{task:"قول المشكل: الماء كيقطر", de:"Das Wasser tropft in der Küche.", need:["wasser"]}] }
+    ];
+    let v2RoleIdx = 0, v2MissionIdx = 0;
+    const V2SHADOW = ["Guten Morgen! Wie geht es dir?","Ich wohne in Mohammedia.","Ich lerne jeden Tag Deutsch.","Das Wetter ist heute schön.","Ich trinke gern Kaffee am Morgen."];
+    const V2DIKTAT = ["Ich heiße Lena.","Wir gehen in die Schule.","Das Brot ist frisch.","Ich lerne Deutsch jeden Tag."];
+    const V2LISTEN = {text:"Samir: Guten Tag! Ich möchte einen Kaffee, bitte. Kellnerin: Gern! Möchten Sie auch ein Brötchen? Samir: Ja, gern. Was kostet das? Kellnerin: Drei Euro fünfzig. Samir: Danke! Hier ist das Geld.", qs:[{q:"شنو طلب سامير؟", opts:["قهوة","شاي","عصير"], ans:0},{q:"الثمن شحال؟", opts:["3.50 يورو","5 يورو","2 يورو"], ans:0},{q:"واش سامير خدا خبزة؟", opts:["نعم","لا"], ans:0}]};
+    function renderSpeaking(){
+      $("#v2SpeakMenu").innerHTML = '<button class="btn green" data-s="lena">🧑‍🏫 محادثة مع Lena</button><button class="btn ghost" data-s="role">🎭 تمثيل أدوار</button><button class="btn ghost" data-s="shadow">🗣️ Shadowing</button><button class="btn ghost" data-s="diktat">✍️ إملاء Diktat</button><button class="btn ghost" data-s="listen">🎧 استماع Goethe</button>';
+      $$("#v2SpeakMenu [data-s]").forEach(b=>b.addEventListener("click", ()=>showSpeaking(b.dataset.s)));
+      showSpeaking("lena");
+    }
+    function showSpeaking(kind){
+      const p = $("#v2SpeakPanel"); if (!p) return;
+      if (kind === "lena") {
+        p.innerHTML = '<div class="v2card"><h3>🧑‍🏫 Lena — محادثة صوتية (محاكاة بالذكاء الاصطناعي المحلي، ماشي معلمة حقيقية)</h3><div class="v2btnrow">' + Object.keys(V2TOPICS).map(k=>'<button class="btn ghost" data-lt="' + k + '">' + esc(V2TOPICS[k].label) + '</button>').join("") + '</div><div class="v2chat" id="v2LenaChat"></div><div class="v2btnrow"><button class="btn green" id="v2LenaMic">🎤 هضر بالميكروفون</button><button class="btn ghost" id="v2LenaHelp">💡 مساعدة</button><button class="btn ghost" id="v2LenaReplay">🔁 عاود آخر جملة</button><button class="btn ghost" id="v2LenaSlow">🐢 بطيء / عادي</button></div><div style="display:flex;gap:8px;margin-top:8px"><input class="v2input" id="v2LenaIn" placeholder="اكتب بالألمانية… أو هضر بالميكروفون"><button class="btn green" id="v2LenaSend">أرسل</button></div><p class="sec-sub">الصوت من متصفحك. إن لم يشتغل الميكروفون، اكتب الجملة — التعلم كيبقى نفسه.</p></div>';
+        $$("[data-lt]").forEach(b=>b.addEventListener("click", ()=>{ v2LenaTopic = b.dataset.lt; v2LenaQ = 0; $("#v2LenaChat").innerHTML = ""; v2LenaSay(V2TOPICS[v2LenaTopic].greet); }));
+        v2LenaSay(V2TOPICS[v2LenaTopic].greet);
+        $("#v2LenaSend").onclick = ()=>{ const v = $("#v2LenaIn").value.trim(); if (v) { v2LenaUser(v); $("#v2LenaIn").value = ""; } };
+        $("#v2LenaIn").addEventListener("keydown", e=>{ if (e.key === "Enter") $("#v2LenaSend").click(); });
+        $("#v2LenaMic").onclick = ()=>{ try { listenOnce(alts=>v2LenaUser(alts[0]||""), ()=>toast("الميكروفون ما خدمش — اكتب الجملة بدل ذلك")); } catch(e) { toast("الميكروفون غير متاح هنا"); } };
+        $("#v2LenaHelp").onclick = ()=>toast("جرّب: Hallo! Ich heiße … / Ich wohne in … / Ich lerne Deutsch.");
+        $("#v2LenaReplay").onclick = ()=>{ if (v2LenaLast) v2SpeakDe(v2LenaLast, v2LenaSlow ? 0.7 : 1); };
+        $("#v2LenaSlow").onclick = ()=>{ v2LenaSlow = !v2LenaSlow; toast(v2LenaSlow ? "السرعة: بطيئة 🐢" : "السرعة: عادية"); };
+      } else if (kind === "role") {
+        const sc = V2ROLE[v2RoleIdx]; const ms = sc.missions[v2MissionIdx];
+        p.innerHTML = '<div class="v2card"><h3>🎭 تمثيل أدوار</h3><div class="v2btnrow">' + V2ROLE.map((s,i)=>'<button class="btn ghost" data-role="' + i + '">' + esc(s.name) + '</button>').join("") + '</div><p><b>السيناريو:</b> ' + esc(sc.name) + ' · المهمة ' + (v2MissionIdx+1) + ' من ' + sc.missions.length + '</p><p><b>المهمة:</b> ' + esc(ms.task) + '</p><p class="de" dir="ltr">مثال: ' + esc(ms.de) + ' <button class="btn ghost" id="v2RoleHear">🔊</button></p><input class="v2input" id="v2RoleIn" placeholder="اكتب أو هضر الجملة بالألمانية…"><div class="v2btnrow"><button class="btn green" id="v2RoleCheck">تحقق من المهمة</button><button class="btn ghost" id="v2RoleMic">🎤 ميكروفون</button></div><div id="v2RoleFb"></div></div>';
+        $$("[data-role]").forEach(b=>b.addEventListener("click", ()=>{ v2RoleIdx = Number(b.dataset.role); v2MissionIdx = 0; showSpeaking("role"); }));
+        $("#v2RoleHear").onclick = ()=> v2SpeakDe(ms.de, 1);
+        const checkRole = (v)=>{ const low = v.toLowerCase(); const ok = ms.need.every(k=>low.includes(k)); const fb = $("#v2RoleFb"); if (ok) { fb.textContent = "✅ برافو! المهمة سالات. " + v2Cheer(); try { addXp(20); updateStats(); } catch(e) {} v2.quests.correct++; saveV2(); setTimeout(()=>{ v2MissionIdx++; if (v2MissionIdx >= sc.missions.length) { v2MissionIdx = 0; toast("🎉 ساليتي السيناريو كامل!"); } showSpeaking("role"); }, 900); } else { fb.textContent = "💡 قريب! حاول تستعمل: " + ms.need.join(", "); } renderToday(); };
+        $("#v2RoleCheck").onclick = ()=>checkRole($("#v2RoleIn").value);
+        $("#v2RoleMic").onclick = ()=>{ try { listenOnce(alts=>{ $("#v2RoleIn").value = alts[0]||""; checkRole(alts[0]||""); }, ()=>toast("الميكروفون ما خدمش — اكتب الجملة")); } catch(e) {} };
+      } else if (kind === "shadow") {
+        p.innerHTML = '<div class="v2card"><h3>🗣️ Shadowing — اسمع، ومن بعد قولها بنفس الطريقة</h3><div id="v2ShadowList"></div></div>';
+        $("#v2ShadowList").innerHTML = V2SHADOW.map((s,i)=>'<div class="v2card"><p class="de" dir="ltr" style="font-size:1.15rem">' + esc(s) + '</p><div class="v2btnrow"><button class="btn ghost" data-shh="' + i + '">🔊 اسمع</button><button class="btn green" data-shm="' + i + '">🎤 قولها</button></div><div class="v2fb" data-shf="' + i + '"></div></div>').join("");
+        $$("[data-shh]").forEach(b=>b.addEventListener("click", ()=>v2SpeakDe(V2SHADOW[Number(b.dataset.shh)], 1)));
+        $$("[data-shm]").forEach(b=>b.addEventListener("click", ()=>{ const i = Number(b.dataset.shm); try { listenOnce(alts=>{ const got = (alts[0]||"").toLowerCase(); const want = V2SHADOW[i].toLowerCase().replace(/[^a-zäöüß ]/g,"").split(/\s+/); const hit = want.filter(w=>got.includes(w)).length; const fb = document.querySelector('[data-shf="' + i + '"]'); if (hit >= Math.ceil(want.length/2)) { fb.textContent = "✅ ممتاز! نطقك قريب بزاف. " + v2Cheer(); try { addXp(15); updateStats(); } catch(e) {} } else { fb.textContent = "💡 سمعتها: " + (alts[0]||"") + " — عاود اسمع وقولها بشوية."; } }, ()=>toast("الميكروفون ما خدمش — قراها بصوت عالي وحدك")); } catch(e) {} }));
+      } else if (kind === "diktat") {
+        p.innerHTML = '<div class="v2card"><h3>✍️ إملاء — اسمع واكتب (عندك 3 محاولات استماع لكل جملة)</h3><div id="v2DiktatList"></div></div>';
+        const plays = {};
+        $("#v2DiktatList").innerHTML = V2DIKTAT.map((s,i)=>{ plays[i] = 3; return '<div class="v2card"><p>الجملة ' + (i+1) + ' من ' + V2DIKTAT.length + '</p><div class="v2btnrow"><button class="btn ghost" data-dh="' + i + '">🔊 اسمع (<span data-dp="' + i + '">3</span> باقيين)</button><button class="btn ghost" data-ds="' + i + '">🐢 ببطء</button></div><input class="v2input" id="v2Dik' + i + '" placeholder="اكتب ما سمعتي…"><button class="btn green" data-dc="' + i + '" style="margin-top:8px">تحقق</button><div class="v2fb" data-df="' + i + '"></div></div>'; }).join("");
+        $$("[data-dh]").forEach(b=>b.addEventListener("click", ()=>{ const i = Number(b.dataset.dh); if (plays[i] <= 0) { toast("ساليتي محاولات الاستماع لهاد الجملة"); return; } plays[i]--; document.querySelector('[data-dp="' + i + '"]').textContent = plays[i]; v2SpeakDe(V2DIKTAT[i], 1); }));
+        $$("[data-ds]").forEach(b=>b.addEventListener("click", ()=>{ const i = Number(b.dataset.ds); if (plays[i] <= 0) { toast("ساليتي محاولات الاستماع"); return; } plays[i]--; document.querySelector('[data-dp="' + i + '"]').textContent = plays[i]; v2SpeakDe(V2DIKTAT[i], 0.7); }));
+        $$("[data-dc]").forEach(b=>b.addEventListener("click", ()=>{ const i = Number(b.dataset.dc); const norm = s=>s.toLowerCase().replace(/[^a-zäöüß ]/g,"").replace(/\s+/g," ").trim(); const got = norm($("#v2Dik" + i).value); const want = norm(V2DIKTAT[i]); const fb = document.querySelector('[data-df="' + i + '"]'); if (got === want) { fb.textContent = "✅ صحيح 100%! " + v2Cheer(); try { addXp(20); updateStats(); } catch(e) {} v2.quests.correct++; saveV2(); } else { fb.textContent = "❌ الصحيح هو: " + V2DIKTAT[i]; v2AddMistake("إملاء", V2DIKTAT[i]); } renderToday(); }));
+      } else if (kind === "listen") {
+        p.innerHTML = '<div class="v2card"><h3>🎧 استماع بحال Goethe — اسمع الحوار جوج مرات فقط، من بعد جاوب</h3><p>اقرا الأسئلة أولاً، من بعد اضغط تشغيل. كل ضغطة كتحسب مرة.</p><div class="v2btnrow"><button class="btn green" id="v2ListenPlay">▶ تشغيل (<span id="v2ListenLeft">2</span> باقيين)</button></div><div id="v2ListenQs" style="display:none">' + V2LISTEN.qs.map((q,i)=>'<div class="v2card"><p><b>' + esc(q.q) + '</b></p><div class="v2btnrow">' + q.opts.map((o,oi)=>'<button class="btn ghost" data-lq="' + i + ':' + oi + '">' + esc(o) + '</button>').join("") + '</div></div>').join("") + '<button class="btn green" id="v2ListenCheck">تحقق من الأجوبة</button><div id="v2ListenFb"></div></div></div>';
+        let left = 2, answers = {};
+        $("#v2ListenPlay").onclick = ()=>{ if (left <= 0) { toast("ساليتي مرات الاستماع — جاوب دابا"); return; } left--; $("#v2ListenLeft").textContent = left; v2SpeakDe(V2LISTEN.text, 1); $("#v2ListenQs").style.display = "block"; };
+        $$("[data-lq]").forEach(b=>b.addEventListener("click", ()=>{ const [i,oi] = b.dataset.lq.split(":").map(Number); answers[i] = oi; }));
+        $("#v2ListenCheck").onclick = ()=>{ let ok = 0; V2LISTEN.qs.forEach((q,i)=>{ if (answers[i] === q.ans) ok++; }); const fb = $("#v2ListenFb"); fb.textContent = ok === V2LISTEN.qs.length ? "✅ كامل صحيح! " + v2Cheer() : "نتيجتك: " + ok + " من " + V2LISTEN.qs.length + " — عاود الحوار في المرة الجاية."; if (ok === V2LISTEN.qs.length) { try { addXp(30); updateStats(); } catch(e) {} v2.quests.correct++; saveV2(); renderToday(); } };
+      }
+    }
+
+    /* ==================== v2: exams, today, notebook, alphabet ==================== */
+    if (!v2.exams) v2.exams = {a1w:false, a1s:false, a2w:false, a2s:false};
+    function renderExams(){
+      const a1done = v2.exams.a1w && v2.exams.a1s;
+      $("#v2ExamMenu").innerHTML = '<button class="btn green" data-ex="a1w">A1 · كتابة</button><button class="btn ghost" data-ex="a1s">A1 · محادثة</button><button class="btn ' + (a1done ? "ghost" : "") + '" data-ex="a2w" ' + (a1done ? "" : "disabled") + '>A2 · كتابة ' + (a1done ? "" : "🔒 سالي A1 أولاً") + '</button><button class="btn ghost" data-ex="a2s" ' + (a1done ? "" : "disabled") + '>A2 · محادثة ' + (a1done ? "" : "🔒") + '</button>';
+      $$("#v2ExamMenu [data-ex]").forEach(b=>b.addEventListener("click", ()=>showExam(b.dataset.ex)));
+      showExam("a1w");
+    }
+    function showExam(kind){
+      const p = $("#v2ExamPanel"); if (!p) return;
+      const tasks = {
+        a1w:{t:"A1 · Schreiben: عرّف بنفسك", d:"اكتب 4 جمل على الأقل: اسمك، عمرك، فين ساكن، وشنو كتحب تدير. على الأقل 30 حرف.", key:"a1w"},
+        a1s:{t:"A1 · Sprechen: هضر على نفسك", d:"جاوب بصوتك أو بالكتابة على: Wie heißt du؟ Wo wohnst du؟ Was machst du gern؟", key:"a1s"},
+        a2w:{t:"A2 · Schreiben: رسالة إلى صاحب الدار", d:"اكتب رسالة قصيرة: سلم، قول المشكل (الماء كيقطر في المطبخ)، وطلب الإصلاح. على الأقل 50 حرف.", key:"a2w"},
+        a2s:{t:"A2 · Sprechen: هضر على يومك", d:"احكي يومك: متى كتفيق، شنو كتدير في الصباح، وشنو كتدير في المساء.", key:"a2s"}
+      };
+      const T = tasks[kind];
+      p.innerHTML = '<div class="v2card"><h3>' + esc(T.t) + '</h3><p>' + esc(T.d) + '</p><textarea class="v2ta" id="v2ExamIn" placeholder="اكتب أو اكتب ما قلتي بالألمانية…"></textarea><div class="v2btnrow"><button class="btn green" id="v2ExamMic">🎤 هضر بالميكروفون</button><button class="btn green" id="v2ExamDone">سلّم الامتحان ✓</button></div><div id="v2ExamFb"></div><p class="sec-sub">التصحيح هنا محلي (قواعد + طول النص)، ماشي تقييم رسمي من Goethe — للتدريب فقط.</p></div>';
+      $("#v2ExamMic").onclick = ()=>{ try { listenOnce(alts=>{ $("#v2ExamIn").value = alts[0]||""; }, ()=>toast("الميكروفون ما خدمش — اكتب الجواب")); } catch(e) {} };
+      $("#v2ExamDone").onclick = ()=>{ const v = $("#v2ExamIn").value.trim(); const r = checkGerman(v); const pass = v.length >= (kind.endsWith("w") && kind.startsWith("a2") ? 50 : 30) && r.score >= 60; const fb = $("#v2ExamFb"); if (pass) { v2.exams[T.key] = true; saveV2(); fb.textContent = "✅ نجحتي! " + v2Cheer() + " +50 XP"; try { addXp(50); updateStats(); } catch(e) {} renderExams(); } else { fb.textContent = "💡 ما زال خاصك تزيد: النص قصير أو فيه أخطاء. النتيجة: " + r.score + "/100 — " + r.fb.join(" "); } };
+    }
+    function renderToday(){
+      v2Today();
+      const q = v2.quests;
+      $("#v2TodayPlan").innerHTML = "1) بطاقة وحدة من البطاقات · 2) جملة وحدة في الكتابة · 3) محادثة قصيرة مع Lena — مجموع تقريبي 10 دقايق.";
+      $("#v2TodayBtns").innerHTML = '<button class="btn green" onclick="showView(\'cards\')">البطاقات ←</button><button class="btn ghost" onclick="showView(\'writing\')">الكتابة ←</button><button class="btn ghost" onclick="showView(\'speaking\')">المحادثة ←</button>';
+      $("#v2Quests").innerHTML = '<p>✏️ كتبتي ' + q.write + ' نصوص (الهدف: 5) ' + (q.write >= 5 ? "✅" : "") + '</p><p>⏱ درست تقريباً ' + q.minutes + ' دقيقة (الهدف: 10)</p><p>🔥 أجوبة صحيحة متتابعة: ' + q.inrow + ' (الهدف: 3) ' + (q.inrow >= 3 ? "✅" : "") + '</p><p>⭐ أجوبة صحيحة اليوم: ' + q.correct + '</p>';
+      $("#v2Project").innerHTML = ["1. اختار التحية المناسبة","2. عرّف بنفسك في سطرين","3. وصف المشكل وطلب الإصلاح","4. اكتب الرسالة كاملة"].map((s,i)=>'<label style="display:block;margin:6px 0"><input type="checkbox" ' + (v2.project[i] ? "checked" : "") + ' data-pr="' + i + '"> ' + esc(s) + (v2.project[i] ? " ✅" : "") + '</label>').join("");
+      $$("#v2Project [data-pr]").forEach(b=>b.addEventListener("change", ()=>{ v2.project[Number(b.dataset.pr)] = b.checked; saveV2(); renderToday(); }));
+      const ican = ["أستطيع أن أعرّف بنفسي","أستطيع أن أطلب قهوة في المقهى","أستطيع أن أكتب رسالة قصيرة","أستطيع أن أفهم حواراً بسيطاً","أستطيع أن أستعمل Perfekt","أستطيع أن ألغي موعداً","أستطيع أن أكتب رسالة إلى صاحب الدار","أستطيع أن أحكي عن يومي","أستطيع أن أعبّر عن رأيي","أستطيع أن أفهم قصة A2","أستطيع أن أتكلم عن عملي","أستطيع أن أكتب كأنني في امتحان B1"];
+      $("#v2Ican").innerHTML = ican.map((s,i)=>'<label style="display:block;margin:6px 0"><input type="checkbox" ' + (v2.ican.includes(i) ? "checked" : "") + ' data-ic="' + i + '"> ' + esc(s) + '</label>').join("");
+      $$("#v2Ican [data-ic]").forEach(b=>b.addEventListener("change", ()=>{ const i = Number(b.dataset.ic); if (b.checked && !v2.ican.includes(i)) v2.ican.push(i); if (!b.checked) v2.ican = v2.ican.filter(x=>x !== i); saveV2(); }));
+      $("#v2Streak").textContent = "سلسلة الأيام: " + v2.streak + " يوم 🔥 · كلمات في دفترك: " + v2.notebook.length + " · أخطاء للمراجعة: " + v2.mistakes.length;
+    }
+    function renderNotebook(){
+      $("#v2NotebookList").innerHTML = v2.notebook.length ? v2.notebook.map((w,i)=>'<div class="v2card"><span class="de" dir="ltr">' + esc(w.de) + '</span> — ' + esc(w.ar) + ' · ' + esc(w.en) + ' <button class="btn ghost" data-nb="' + i + '">حذف</button></div>').join("") : "<p>ما زال ما ضفتي حتى كلمة. افتح قصة واضغط على كلمة مسطرة.</p>";
+      $$("#v2NotebookList [data-nb]").forEach(b=>b.addEventListener("click", ()=>{ v2.notebook.splice(Number(b.dataset.nb), 1); saveV2(); renderNotebook(); }));
+      $("#v2MistakesList").innerHTML = v2.mistakes.length ? v2.mistakes.map(m=>'<div class="v2card"><b>' + esc(m.rule) + '</b><br><span class="de" dir="ltr">' + esc(m.ex) + '</span></div>').join("") : "<p>ما كاين حتى خطأ مسجل — ممتاز! الأخطاء كتظهر هنا من الكتابة والإملاء.</p>";
+      const cm = document.getElementById("v2ClearMistakes"); if (cm) cm.onclick = ()=>{ v2.mistakes = []; saveV2(); renderNotebook(); toast("تمسحات الأخطاء — برافو 👏"); };
+    }
+    const V2ALPHA = [
+      ["A","A","Apfel","تفاحة","كيتنطق “آ” مفتوحة، بحال A في “آه”."],
+      ["B","Be","Brot","خبز","B بحال B الفرنسية، خفيفة."],
+      ["C","Ce","Computer","حاسوب","قبل A/O/U كيتنطق K، وقبل E/I غالباً Ts."],
+      ["D","De","Danke","شكراً","D عادية، وفي آخر الكلمة كتقرب من T."],
+      ["E","E","Essen","أكل","E بحال “إي” قصيرة أو طويلة حسب الكلمة."],
+      ["F","Ef","Frau","امرأة","F بحال F، من الشفايف والأسنان."],
+      ["G","Ge","Garten","حديقة","G بحال “غ” خفيفة، ماشي جيم مصرية."],
+      ["H","Ha","Haus","دار","H كيتنفس من الحلق، خفيف."],
+      ["I","I","Insel","جزيرة","I بحال “إي” قصيرة."],
+      ["J","Jot","Jahr","سنة","J كيتنطق Y، بحال “يا”."],
+      ["K","Ka","Kind","طفل","K قوية من الحلق."],
+      ["L","El","Liebe","حب","L من طرف اللسان."],
+      ["M","Em","Morgen","صباح","M من الشفايف مسدودة."],
+      ["N","En","Nacht","ليل","N من اللسان والأنف."],
+      ["O","O","Osten","شرق","O مدورة، بحال “أو”."],
+      ["P","Pe","Park","حديقة عامة","P من الشفايف مع نفخة خفيفة."],
+      ["Q","Ku","Quelle","مصدر / عين","Q ديما مع U، وكيتنطق “كو”."],
+      ["R","Er","Regen","مطر","R ألمانية من الحلق، ماشي R فرنسية قوية."],
+      ["S","Es","Sonne","شمس","S وحدها بحال Z خفيفة، وقبل P/T في أول الكلمة بحال “ش”."],
+      ["T","Te","Tag","يوم","T قوية وواضحة."],
+      ["U","U","Uhr","ساعة","U مدورة ولسان للور، بحال “أو” مغلقة."],
+      ["V","Fau","Vogel","طائر","V في الألمانية غالباً بحال F، ماشي V إنجليزية."],
+      ["W","We","Wasser","ماء","W بحال V إنجليزية، من الأسنان والشفايف."],
+      ["X","Ix","Xylophon","إكسيليفون","X = K + S مع بعض."],
+      ["Y","Ypsilon","Yoga","يوغا","Y بحال Ü، نادرة في الكلمات الألمانية الأصلية."],
+      ["Z","Zet","Zeit","وقت","Z كيتنطق “تس”، ماشي Z."],
+      ["Ä","Ä","Äpfel","تفاح (جمع)","Ä قريبة من E مفتوحة، بحال “آي” خفيفة."],
+      ["Ö","Ö","Öl","زيت","Ö: شفايف مدورة بحال O، ولسان قدام بحال E."],
+      ["Ü","Ü","Übung","تمرين","Ü: شفايف مدورة بحال U، ولسان قدام بحال I — هادي هي اللي كتفرقها على U."],
+      ["ß","Eszett","Straße","شارع","ß كيتنطق ss، وكيجي غير من بعد صوت طويل، وعمره ما كيبدا كلمة. Straße = شتراسه."]
+    ];
+    function renderAlphabet(){
+      $("#v2AlphaGrid").innerHTML = V2ALPHA.map(a=>'<div class="v2card"><div class="v2letter">' + esc(a[0]) + '</div><p><b>اسم الحرف:</b> <span class="de" dir="ltr">' + esc(a[1]) + '</span> · <b>مثال:</b> <span class="de" dir="ltr">' + esc(a[2]) + '</span> — ' + esc(a[3]) + '</p><p>' + esc(a[4]) + '</p><div class="v2btnrow"><button class="btn green" data-al="' + esc(a[0]) + '">🔊 اسمع الحرف</button><button class="btn ghost" data-als="' + esc(a[0]) + '">🐢 ببطء</button><button class="btn ghost" data-alw="' + esc(a[2]) + '">🔊 اسمع المثال</button></div></div>').join("");
+      $$("[data-al]").forEach(b=>b.addEventListener("click", ()=>v2SpeakDe(b.dataset.al, 1)));
+      $$("[data-als]").forEach(b=>b.addEventListener("click", ()=>v2SpeakDe(b.dataset.als, 0.6)));
+      $$("[data-alw]").forEach(b=>b.addEventListener("click", ()=>v2SpeakDe(b.dataset.alw, 1)));
+      $("#v2AlphaAll").onclick = ()=>{
+        try { window.speechSynthesis.cancel(); } catch(e) {}
+        let i = 0; const step = ()=>{ if (i >= V2ALPHA.length) return; v2SpeakDe(V2ALPHA[i][0], 0.9); i++; setTimeout(step, 1100); }; step();
+      };
+      $("#v2AlphaStop").onclick = ()=>{ try { window.speechSynthesis.cancel(); } catch(e) {} };
+    }
+    /* study minutes: honest local timer, only while the page is visible and recently used */
+    let v2LastInteract = Date.now();
+    document.addEventListener("click", ()=>{ v2LastInteract = Date.now(); });
+    document.addEventListener("keydown", ()=>{ v2LastInteract = Date.now(); });
+    setInterval(()=>{ if (!document.hidden && Date.now() - v2LastInteract < 5*60*1000) { v2.quests.minutes++; saveV2(); } }, 60000);
+    /* ==================== v2 init ==================== */
+    function v2Init(){
+      v2Today(); renderWriting(); renderSpeaking(); renderExams(); renderToday(); renderNotebook(); renderAlphabet(); v2PatchReaders();
+    }
+
     /* ==================== init ==================== */
     buildNav();
     renderPath();
@@ -2344,6 +2814,7 @@
     renderGrammar();
     renderStories();
     renderArticles();
+    try { v2Init(); } catch(e) { console.error(e); }
     updateStats();
     showView("path");
     $("#chatBox").innerHTML = "";
